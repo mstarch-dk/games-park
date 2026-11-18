@@ -112,7 +112,7 @@ const Game = {
     this.bomberWarn = 0;
     this.spentBomb = false;
     this.bomberTimer = this.level.def.bomber.first;
-    this.bomberMarks = [0.3, 0.65]; // hurtige aber møder også flyet
+    this.bomberMarks = [0.15, 0.33, 0.65, 0.83]; // hurtige aber møder også flyet
     this.flash = 0;
     Particles.list = [];
     Popups.list = [];
@@ -552,7 +552,7 @@ const Game = {
   },
 
   levelComplete() {
-    const timeBonus = Math.max(0, Math.round(150 - this.levelTime)) * 10;
+    const timeBonus = Math.max(0, Math.round(300 - this.levelTime)) * 10;
     const bananaBonus = this.levelBananas * 20;
     this.bonus = { base: 1000, time: timeBonus, bananas: bananaBonus };
     this.score += 1000 + timeBonus + bananaBonus;
