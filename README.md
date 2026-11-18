@@ -18,6 +18,8 @@ og gå til http://localhost:8123
 | P | pause |
 | M | lyd til/fra |
 
+I hovedmenuen vælger du **Start spil** eller **Vælg bane** med piletasterne og bekræfter med MELLEMRUM eller ENTER. På bane-skærmen går ESC tilbage til menuen. Spillet fortsætter til de næste baner fra den bane, du starter på.
+
 ## Point
 - Hop over en tønde: **+100**
 - Hop oven på en tønde (BOING!): **+50**

@@ -54,6 +54,16 @@ function drawHUD(ctx, g) {
   }
 }
 
+function menuButton(ctx, cx, cy, w, h, label, active) {
+  ctx.fillStyle = active ? '#ffd23b' : 'rgba(30,15,50,0.82)';
+  roundRect(ctx, cx - w / 2, cy - h / 2, w, h, 14);
+  ctx.fill();
+  ctx.strokeStyle = active ? '#fff' : '#ffd23b';
+  ctx.lineWidth = active ? 4 : 2;
+  ctx.stroke();
+  text(ctx, label, cx, cy, 24, active ? '#4a2508' : '#fff', 'center', active ? '#ffe98f' : '#2a1a0a');
+}
+
 function panel(ctx, x, y, w, h) {
   ctx.fillStyle = 'rgba(30,15,50,0.78)';
   roundRect(ctx, x, y, w, h, 22);

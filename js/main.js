@@ -4,6 +4,15 @@ const ctx = canvas.getContext('2d');
 
 const SMASH_WORDS = ['SMADR!', 'BANG!', 'KABOOM!', 'POW!', 'KRASH!'];
 
+// Skærmen hvor man vælger bane: kort i et gitter, der ruller ved mange baner.
+const SELECT_COLS = 4;
+const SELECT_ROWS = 2;
+const CARD_W = 200;
+const CARD_H = 150;
+const CARD_GAP = 20;
+const THUMB_W = 184;
+const THUMB_H = 100;
+
 const Game = {
   state: 'title',
   stateTime: 0,
@@ -11,6 +20,9 @@ const Game = {
   score: 0,
   lives: 3,
   levelIndex: 0,
+  menuChoice: 0,   // 0 = start spil, 1 = vælg bane
+  selected: 0,     // banen der er markeret på bane-skærmen
+  selectTop: 0,    // øverste synlige række på bane-skærmen
   bananaCount: 0,
   highscore: 0,
   camX: 0,
@@ -41,12 +53,49 @@ const Game = {
     }
   },
 
-  startGame() {
+  startGame(levelIndex = 0) {
     this.score = 0;
     this.lives = 3;
     this.bananaCount = 0;
     this.newHighscore = false;
-    this.loadLevel(0);
+    this.loadLevel(levelIndex);
+  },
+
+  openLevelSelect() {
+    this.selected = this.levelIndex;
+    this.selectTop = 0;
+    this.scrollToSelected();
+    this.setState('levelSelect');
+  },
+
+  scrollToSelected() {
+    const row = Math.floor(this.selected / SELECT_COLS);
+    if (row < this.selectTop) this.selectTop = row;
+    if (row >= this.selectTop + SELECT_ROWS) this.selectTop = row - SELECT_ROWS + 1;
+  },
+
+  moveSelection(dx, dy) {
+    const n = LEVELS.length;
+    const before = this.selected;
+    if (dx) this.selected = (this.selected + dx + n) % n;
+    if (dy) {
+      const target = this.selected + dy * SELECT_COLS;
+      const lastRow = Math.floor((n - 1) / SELECT_COLS);
+      if (target >= 0 && target < n) this.selected = target;
+      else if (dy > 0 && Math.floor(this.selected / SELECT_COLS) < lastRow) this.selected = n - 1;
+    }
+    if (this.selected !== before) {
+      this.scrollToSelected();
+      Sound.tick();
+    }
+  },
+
+  updateLevelSelect() {
+    if (Input.hit('Escape')) { this.setState('title'); return; }
+    if (Input.confirm()) { Sound.banana(); this.startGame(this.selected); return; }
+    const dx = (Input.hit('ArrowRight', 'KeyD') ? 1 : 0) - (Input.hit('ArrowLeft', 'KeyA') ? 1 : 0);
+    const dy = (Input.hit('ArrowDown', 'KeyS') ? 1 : 0) - (Input.hit('ArrowUp', 'KeyW') ? 1 : 0);
+    if (dx || dy) this.moveSelection(dx, dy);
   },
 
   loadLevel(i) {
@@ -88,7 +137,17 @@ const Game = {
 
     switch (this.state) {
       case 'title':
-        if (Input.confirm()) this.startGame();
+        if (Input.hit('ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'KeyA', 'KeyD', 'KeyW', 'KeyS')) {
+          this.menuChoice = 1 - this.menuChoice;
+          Sound.tick();
+        } else if (Input.confirm()) {
+          Sound.banana();
+          if (this.menuChoice === 0) this.startGame();
+          else this.openLevelSelect();
+        }
+        break;
+      case 'levelSelect':
+        this.updateLevelSelect();
         break;
       case 'intro':
         Particles.update(dt);
@@ -525,6 +584,7 @@ const Game = {
   // ---------- Tegning ----------
   draw() {
     if (this.state === 'title') { this.drawTitle(); return; }
+    if (this.state === 'levelSelect') { this.drawLevelSelect(); return; }
     const L = this.level;
     const sx = (Math.random() - 0.5) * this.shake;
     const sy = (Math.random() - 0.5) * this.shake;
@@ -658,7 +718,65 @@ const Game = {
     text(ctx, 'dobbelthop', W / 2 + 90, 302, 17, '#fff', 'left');
     text(ctx, `Highscore: ${this.highscore}`, W / 2, 345, 20, '#7fffb0');
 
-    if (Math.floor(t * 2) % 2 === 0) text(ctx, 'Tryk MELLEMRUM for at starte!', W / 2, 405, 26, '#fff');
+    menuButton(ctx, W / 2 - 125, 405, 230, 44, 'START SPIL', this.menuChoice === 0);
+    menuButton(ctx, W / 2 + 125, 405, 230, 44, 'VÆLG BANE', this.menuChoice === 1);
+  },
+
+  // Et lille billede af starten på hver bane. Tegnes kun én gang.
+  levelThumb(i) {
+    if (!this.thumbs) this.thumbs = [];
+    if (this.thumbs[i]) return this.thumbs[i];
+    const thumb = document.createElement('canvas');
+    thumb.width = THUMB_W * 2;
+    thumb.height = THUMB_H * 2;
+    const c = thumb.getContext('2d');
+    c.scale(thumb.width / W, thumb.height / H);
+    const L = new Level(LEVELS[i]);
+    drawBackground(c, 0, L.theme, 0);
+    L.drawTiles(c, 0, 0);
+    L.drawMovers(c, 0);
+    L.drawCheckpoints(c, 0);
+    L.drawFinish(c, 0);
+    for (const bn of L.bananas) drawBanana(c, bn.x, bn.y, 0);
+    for (const g of L.golds) drawGoldBanana(c, g.x, g.y, 0);
+    for (const it of L.items) drawItem(c, it, 0);
+    for (const cn of L.cannons) drawCannon(c, cn, 0);
+    this.thumbs[i] = thumb;
+    return thumb;
+  },
+
+  drawLevelSelect() {
+    const t = this.t;
+    const theme = THEMES[LEVELS[this.selected].theme] || THEMES.jungle;
+    drawBackground(ctx, t * 30, theme, t);
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fillRect(0, 0, W, H);
+    text(ctx, 'VÆLG BANE', W / 2, 46, 50, '#ffd23b', 'center', '#4a2508');
+
+    const x0 = (W - SELECT_COLS * CARD_W - (SELECT_COLS - 1) * CARD_GAP) / 2;
+    const y0 = 95;
+    const first = this.selectTop * SELECT_COLS;
+    const last = Math.min(LEVELS.length, first + SELECT_ROWS * SELECT_COLS);
+    for (let i = first; i < last; i++) {
+      const col = i % SELECT_COLS;
+      const row = Math.floor(i / SELECT_COLS) - this.selectTop;
+      const x = x0 + col * (CARD_W + CARD_GAP);
+      const y = y0 + row * (CARD_H + CARD_GAP);
+      const active = i === this.selected;
+      ctx.fillStyle = active ? 'rgba(70,35,100,0.95)' : 'rgba(30,15,50,0.82)';
+      roundRect(ctx, x, y, CARD_W, CARD_H, 14);
+      ctx.fill();
+      ctx.drawImage(this.levelThumb(i), x + 8, y + 8, THUMB_W, THUMB_H);
+      ctx.strokeStyle = active ? '#ffd23b' : 'rgba(255,255,255,0.3)';
+      ctx.lineWidth = active ? 5 : 2;
+      roundRect(ctx, x, y, CARD_W, CARD_H, 14);
+      ctx.stroke();
+      text(ctx, `${i + 1}. ${LEVELS[i].name}`, x + CARD_W / 2, y + 128, 19, active ? '#ffd23b' : '#fff');
+    }
+
+    if (this.selectTop > 0) text(ctx, '▲ flere baner', W / 2, 83, 15, '#fff');
+    if (last < LEVELS.length) text(ctx, '▼ flere baner', W / 2, 432, 15, '#fff');
+    text(ctx, '← → ↑ ↓ vælg   ·   MELLEMRUM start   ·   ESC tilbage', W / 2, 468, 20, '#ffe46b');
   },
 };
 
