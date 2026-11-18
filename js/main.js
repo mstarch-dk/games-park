@@ -57,6 +57,14 @@ const Game = {
     this.player = new Player(s.x, s.y);
     this.respawn = { x: s.x, y: s.y };
     this.barrels = [];
+    this.bomber = null;
+    this.bombs = [];
+    this.blasts = [];
+    this.bomberWarn = 0;
+    this.spentBomb = false;
+    this.bomberTimer = this.level.def.bomber.first;
+    this.bomberMarks = [0.3, 0.65]; // hurtige aber møder også flyet
+    this.flash = 0;
     Particles.list = [];
     Popups.list = [];
     this.camX = 0;
@@ -125,6 +133,171 @@ const Game = {
     Particles.update(dt);
     Popups.update(dt);
     this.shake = Math.max(0, this.shake - dt * 30);
+    this.flash = Math.max(0, this.flash - dt * 4);
+    for (const b of this.blasts) b.t += dt;
+    this.blasts = this.blasts.filter((b) => b.t < 0.55);
+  },
+
+  // Giver bananer, og et ekstra liv for hver 50.
+  addBananas(n) {
+    const p = this.player;
+    this.levelBananas += n;
+    for (let i = 0; i < n; i++) {
+      this.bananaCount++;
+      if (this.bananaCount % 50 === 0) {
+        this.lives++;
+        Sound.oneUp();
+        Popups.add(p.cx, p.y - 30, 'EKSTRA LIV!', '#ff8fb0', 30);
+      }
+    }
+  },
+
+  nextBomberTime() {
+    const [a, b] = this.level.def.bomber.every;
+    return a + Math.random() * (b - a);
+  },
+
+  // ---------- Bombeflyet ----------
+  updateBomber(dt) {
+    const L = this.level;
+    const p = this.player;
+    const cfg = L.def.bomber;
+
+    // Når aben når et bestemt stykke ind på banen, kommer flyet snart
+    if (this.bomberMarks.length && p.cx > this.bomberMarks[0] * L.w * TILE) {
+      this.bomberMarks.shift();
+      this.bomberTimer = Math.min(this.bomberTimer, 1);
+    }
+
+    if (this.bomberWarn > 0) {
+      this.bomberWarn -= dt;
+      if (this.bomberWarn <= 0) {
+        this.bomberWarn = 0;
+        this.bomber = new Bomber(this.camX + W + BOMBER_HALF + 40, cfg.bombs);
+      }
+    } else if (!this.bomber && this.bombs.length === 0) {
+      this.bomberTimer -= dt;
+      if (this.bomberTimer <= 0) {
+        // Ingen angreb lige ved målet
+        if (L.finish && p.cx > L.finish.x - 680) {
+          this.bomberTimer = 3;
+        } else {
+          this.bomberWarn = BOMBER_WARN;
+          Sound.siren();
+        }
+      }
+    }
+
+    const pl = this.bomber;
+    if (pl) {
+      pl.update(dt);
+      pl.putt -= dt;
+      const seen = pl.x + BOMBER_HALF > this.camX && pl.x - BOMBER_HALF < this.camX + W;
+      if (seen && pl.putt <= 0) { pl.putt = 0.17; Sound.plane(); }
+
+      const target = p.cx + p.vx * 0.55 + pl.aim;
+      const limit = p.cx - (pl.dropped ? 420 : 260);
+      if (pl.armed && pl.toDrop > 0 && pl.gap <= 0 && pl.x <= target && pl.x > limit && L.groundBelow(pl.x)) {
+        this.dropBomb(pl);
+      }
+      if (pl.x + BOMBER_HALF < this.camX - 80) {
+        this.bomber = null;
+        if (!pl.dropped) this.bomberTimer = 8;
+      }
+    }
+
+    for (const b of this.bombs) {
+      b.update(dt, L);
+      if (b.tick <= 0 && Math.abs(b.cx - p.cx) < 900) {
+        b.tick = b.fuse > 2 ? 0.5 : b.fuse > 1 ? 0.25 : 0.11;
+        Sound.tick();
+      }
+      // Hop på bomben, og den bliver sparket væk
+      if (b.kickWait <= 0 && overlap(p, b, 4) && p.vy > 0 && p.y + p.h - b.y < 24) {
+        p.vy = Input.jumpHeld() ? -820 : -600;
+        p.airJumps = 0;
+        b.vx = p.facing * 300;
+        b.vy = -240;
+        b.kickWait = 0.4;
+        Sound.boing();
+        if (!b.scored) { b.scored = true; this.addScore(50, b.cx, b.y - 10, 'BOING!', '#7fffb0'); }
+      }
+      if (L.hazardAt(b) || b.y > L.h * TILE + 40) {
+        this.fizzle(b);
+      } else if (b.fuse <= 0) {
+        this.explode(b);
+        if (this.state !== 'playing') return;
+      }
+    }
+    this.bombs = this.bombs.filter((b) => b.alive);
+    if (this.spentBomb && this.bombs.length === 0) this.bomberTimer = this.nextBomberTime();
+    this.spentBomb = false;
+  },
+
+  dropBomb(pl) {
+    const cfg = this.level.def.bomber;
+    const p = this.player;
+    const fuse = cfg.fuse[0] + Math.random() * (cfg.fuse[1] - cfg.fuse[0]);
+    this.bombs.push(new Bomb(pl.x, pl.y + 62, fuse, cfg.radius));
+    pl.toDrop--;
+    pl.dropped++;
+    pl.gap = 0.55;
+    pl.doors = 0.5;
+    Sound.bombDrop();
+    if (p.energy <= 0) Sound.superOn();
+    p.energy = Math.max(p.energy, fuse + ENERGY_AFTER);
+    p.energyMax = p.energy;
+    if (pl.dropped === 1) Popups.add(p.cx, p.y - 34, 'SUPER-ENERGI! LØB!', '#ffe234', 28);
+    Particles.burst(p.cx, p.cy, 18, { color: ['#ffe234', '#fff'], shape: 'star', size: 5, speed: 220, life: 0.6 });
+  },
+
+  fizzle(b) {
+    b.alive = false;
+    this.spentBomb = true;
+    Sound.splash();
+    Popups.add(b.cx, b.y - 20, 'PFFT!', '#c9f0ff', 28);
+    Particles.burst(b.cx, b.cy, 14, { color: ['#ddd', '#999'], size: 6, speed: 110, up: 120, life: 0.8 });
+  },
+
+  explode(b) {
+    const p = this.player;
+    const x = b.cx, y = b.cy, R = b.radius;
+    b.alive = false;
+    this.spentBomb = true;
+    this.blasts.push({ x, y, r: R, t: 0 });
+    Popups.add(x, y - 40, 'KABOOM!', '#ffb02e', 58);
+    Particles.burst(x, y, 50, { color: ['#ff4a1a', '#ffb02e', '#ffe36b', '#555'], size: 9, speed: R * 1.9, grav: 500, life: 0.9 });
+    Particles.burst(x, y, 16, { color: ['#22242c', '#555a66'], shape: 'rect', size: 7, speed: 420, up: 160, grav: 1200, life: 1 });
+
+    for (const o of this.barrels) {
+      if (o.alive && Math.hypot(o.x + 15 - x, o.y + 15 - y) < R) this.smash(o, 150);
+    }
+    for (const c of this.level.cannons) {
+      const cx = c.x + 20, cy = c.y + 20;
+      if (Math.hypot(cx - x, cy - y) < R) {
+        if (c.stun <= 0) this.addScore(150, cx, cy - 30, 'UDE AF DRIFT! +150', '#ffb347');
+        c.stun = 8;
+      }
+    }
+
+    Sound.boom();
+    this.shake = 24;
+    this.flash = 1;
+
+    const d = Math.hypot(p.cx - x, p.cy - y);
+    if (d < R) {
+      if (p.star > 0 || p.invuln > 0) {
+        Popups.add(p.cx, p.y - 24, 'PYH!', '#7fffb0', 28);
+      } else {
+        this.hurt({ x: x - 15 });
+        p.vx = (p.cx < x ? -1 : 1) * 300;
+        p.vy = -620;
+        p.soot = 2.5;
+        this.shake = 24;
+      }
+    } else if (d < R + BOMB_NEAR) {
+      this.addScore(300, p.cx, p.y - 30, 'PÅ ET HÅR! +300', '#ffe46b');
+    }
   },
 
   updatePlay(dt) {
@@ -149,6 +322,11 @@ const Game = {
       const dx = p.cx - (c.x + 20);
       c.dir = dx < 0 ? -1 : 1;
       c.puff = Math.max(0, c.puff - dt);
+      if (c.stun > 0) {
+        c.stun = Math.max(0, c.stun - dt);
+        if (Math.random() < dt * 6) Particles.add({ x: c.x + 20, y: c.y, size: 6, color: 'rgba(70,70,70,0.6)', life: 0.8, vy: -45 });
+        continue;
+      }
       if (Math.abs(dx) < 820 && Math.abs(dx) > 110 && this.barrels.length < 14) {
         c.timer -= dt;
         if (c.timer <= 0) {
@@ -190,7 +368,12 @@ const Game = {
         this.addScore(100, p.cx, p.y - 10, '+100', '#ffe46b');
       }
     }
+    if (this.state !== 'playing') return;
+
+    // Bombefly og bomber
+    this.updateBomber(dt);
     this.barrels = this.barrels.filter((b) => b.alive);
+    if (this.state !== 'playing') return;
 
     // Bananer
     for (const bn of L.bananas) {
@@ -198,16 +381,23 @@ const Game = {
       const dx = bn.x - p.cx, dy = bn.y - p.cy;
       if (dx * dx + dy * dy < 28 * 28) {
         bn.taken = true;
-        this.bananaCount++;
-        this.levelBananas++;
+        this.addBananas(1);
         this.addScore(10);
         Sound.banana();
         Particles.burst(bn.x, bn.y, 6, { color: '#fff36b', shape: 'star', size: 4, speed: 100, life: 0.5 });
-        if (this.bananaCount % 50 === 0) {
-          this.lives++;
-          Sound.oneUp();
-          Popups.add(p.cx, p.y - 30, 'EKSTRA LIV!', '#ff8fb0', 30);
-        }
+      }
+    }
+
+    // Guld-bananer
+    for (const g of L.golds) {
+      if (g.taken) continue;
+      const dx = g.x - p.cx, dy = g.y - p.cy;
+      if (dx * dx + dy * dy < 32 * 32) {
+        g.taken = true;
+        this.addBananas(5);
+        this.addScore(250, g.x, g.y + 26, 'GULD! +250', '#ffd23b');
+        Sound.oneUp();
+        Particles.burst(g.x, g.y, 16, { color: ['#ffd23b', '#fff'], shape: 'star', size: 5, speed: 180, life: 0.7 });
       }
     }
 
@@ -285,8 +475,14 @@ const Game = {
     p.vx = 0;
     p.vy = 0;
     p.star = 0;
+    p.energy = 0;
     p.invuln = 2;
     this.barrels = this.barrels.filter((b) => Math.abs(b.x - p.x) > 450);
+    // Et frisk forsøg: ingen bomber i hovedet lige efter genstart
+    this.bombs = this.bombs.filter((b) => Math.abs(b.cx - p.x) > 600);
+    this.bomberWarn = 0;
+    if (this.bomber) this.bomber.armed = false;
+    this.bomberTimer = Math.max(this.bomberTimer, 8);
   },
 
   gameOver() {
@@ -336,24 +532,33 @@ const Game = {
 
     ctx.save();
     ctx.translate(Math.round(-this.camX + sx), Math.round(sy));
+    if (this.bomber) this.bomber.draw(ctx);
     L.drawTiles(ctx, this.camX, this.t);
     L.drawMovers(ctx, this.t);
     L.drawCheckpoints(ctx, this.t);
     L.drawFinish(ctx, this.t);
     for (const bn of L.bananas) if (!bn.taken) drawBanana(ctx, bn.x, bn.y, this.t);
+    for (const g of L.golds) if (!g.taken) drawGoldBanana(ctx, g.x, g.y, this.t);
     for (const it of L.items) if (!it.taken) drawItem(ctx, it, this.t);
     for (const c of L.cannons) drawCannon(ctx, c, this.t);
+    for (const b of this.bombs) b.drawZone(ctx, this.t);
     for (const b of this.barrels) b.draw(ctx);
+    for (const b of this.bombs) b.draw(ctx, this.t);
     if (this.state === 'levelDone' || this.state === 'win') {
       const p = this.player;
       drawMonkey(ctx, p.cx, p.y + p.h, { facing: 1, dance: true, t: this.t, runPhase: this.t * 12, squash: Math.sin(this.t * 10) * 0.15 });
     } else if (this.state !== 'gameover') {
       this.player.draw(ctx, this.t);
     }
+    for (const b of this.blasts) drawBlast(ctx, b);
     Particles.draw(ctx);
     Popups.draw(ctx);
     ctx.restore();
 
+    if (this.flash > 0) {
+      ctx.fillStyle = `rgba(255,245,215,${this.flash * 0.5})`;
+      ctx.fillRect(0, 0, W, H);
+    }
     drawHUD(ctx, this);
     this.drawOverlay();
   },

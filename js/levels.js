@@ -5,13 +5,21 @@
 //     =  jord / mur                  -  tynd platform (man kan hoppe op igennem den)
 //     P  her starter aben            F  målet (den store bananklase)
 //     o  banan                       C  checkpoint-flag
+//     G  guld-banan (kræver super-hop)
 //     B  tønde-kanon                 M  bevægelig platform (3 felter bred)
 //     H  hammer                      S  stjerne (uovervindelig)
 //     W  fjer (dobbelthop)           L  lava       ~  vand
 //
 //  barrelSpeed = hvor hurtigt tønderne ruller
 //  spawnEvery  = hvor mange sekunder der går mellem hver tønde
-//  theme       = jungle, beach, volcano, sky eller castle
+//  theme       = jungle, beach, volcano, sky, castle, desert, snow eller night
+//
+//  bomber      = bombeflyet:
+//     first  = sekunder før det kommer første gang
+//     every  = [mindst, højst] sekunder mellem angrebene
+//     fuse   = [mindst, højst] sekunder før bomben springer
+//     radius = farezonens størrelse i pixels (en firkant er 40)
+//     bombs  = hvor mange bomber flyet smider
 // =====================================================================
 const LEVELS = [
   {
@@ -19,11 +27,12 @@ const LEVELS = [
     theme: 'jungle',
     barrelSpeed: 110,
     spawnEvery: 4.2,
+    bomber: { first: 14, every: [26, 34], fuse: [4.6, 5], radius: 220, bombs: 1 },
     map: [
       '                                                                                                              ',
       '                                                                                                              ',
-      '                                                                                                              ',
-      '                                                                                                              ',
+      '                       G                                     G                                                ',
+      '                     G   G                                 G   G                                              ',
       '                                                                                                              ',
       '                                      o o o                                     o o o                         ',
       '                                     -------                                   -------                        ',
@@ -40,11 +49,12 @@ const LEVELS = [
     theme: 'beach',
     barrelSpeed: 130,
     spawnEvery: 3.6,
+    bomber: { first: 14, every: [24, 32], fuse: [4.2, 5], radius: 235, bombs: 1 },
     map: [
       '                                                                                                                                  ',
       '                                                                                                                                  ',
-      '                                                                                                                                  ',
-      '                                                                                                                                  ',
+      '                                                                            G                               G                     ',
+      '                                                                          G   G                           G   G                   ',
       '                                                                                                                                  ',
       '                            o o o                                 S                                                               ',
       '                           -------                              -----                                                             ',
@@ -61,11 +71,12 @@ const LEVELS = [
     theme: 'volcano',
     barrelSpeed: 150,
     spawnEvery: 3.1,
+    bomber: { first: 12, every: [22, 30], fuse: [3.8, 4.6], radius: 250, bombs: 1 },
     map: [
       '                                                                                                                                  ',
       '                                                                                                                                  ',
-      '                                                                                                                                  ',
-      '                                                                                                                                  ',
+      '                        G                                     G                               G                                   ',
+      '                      G   G                                 G   G                           G   G                                 ',
       '                                                 o o o                                                                            ',
       '                                                -------                      S                                                    ',
       '                                                                            ---                                                   ',
@@ -82,11 +93,12 @@ const LEVELS = [
     theme: 'sky',
     barrelSpeed: 140,
     spawnEvery: 3.4,
+    bomber: { first: 12, every: [22, 28], fuse: [3.8, 4.6], radius: 240, bombs: 1 },
     map: [
       '                                                                                                                                            ',
       '                                                                                                                                            ',
-      '                                                                                                                                            ',
-      '                                                                                                                                            ',
+      '              G                                  G                                                            G                             ',
+      '            G   G                              G   G                                                        G   G                           ',
       '                                                                                                                                            ',
       '                                                                                     o o o                                                  ',
       '                             o o o                               S                                   o o o                                  ',
@@ -103,11 +115,12 @@ const LEVELS = [
     theme: 'castle',
     barrelSpeed: 175,
     spawnEvery: 2.6,
+    bomber: { first: 10, every: [20, 26], fuse: [3.4, 4.2], radius: 265, bombs: 1 },
     map: [
       '                                                                                                                                                      ',
       '                                                                                                                                                      ',
-      '                                                                                                                                                      ',
-      '                                                                                                                                                      ',
+      '                                                     G                                    G                                    G                      ',
+      '                                                   G   G                                G   G                                G   G                    ',
       '                                                                                                                                                      ',
       '                                 o o o                                         o o                                                                    ',
       '                                -------                                       -----                                                                   ',
@@ -117,6 +130,72 @@ const LEVELS = [
       '  P   o o o            B      =    B         B    =   C              B          B          B   =   o o           C      B            o o    B     F   ',
       '==================   =================   ===================      ==================   =================      ==================   ===================',
       '==================LLL=================LLL===================LLLLLL==================LLL=================LLLLLL==================LLL===================',
+    ],
+  },
+  {
+    name: 'Ørkenoasen',
+    theme: 'desert',
+    barrelSpeed: 165,
+    spawnEvery: 2.9,
+    bomber: { first: 10, every: [18, 24], fuse: [3.4, 4.2], radius: 270, bombs: 1 },
+    map: [
+      '                                                                                                                                                      ',
+      '                                                                                                                                                      ',
+      '                      G                                       G                                             G                                         ',
+      '                    G   G                                   G   G                                         G   G                                       ',
+      '                                              S                                                                                                       ',
+      '                                           o o o                                       o o                                                            ',
+      '                                          -------                                     -----                                                           ',
+      '           o o o                  o o                 H                      o o o                                           o o o                    ',
+      '          -------                -----              -----                   --------              -----                     ------                    ',
+      '                                                                                                                                                      ',
+      '  P   o o o       B          o o o      B                 C   o B o                 B           o o     C     B           o o o   B     o o       F   ',
+      '========================   ===================    ====================   ===================    ======================   =============================',
+      '========================~~~===================~~~~====================~~~===================~~~~======================~~~=============================',
+    ],
+  },
+  {
+    name: 'Snebjerget',
+    theme: 'snow',
+    barrelSpeed: 170,
+    spawnEvery: 2.8,
+    bomber: { first: 10, every: [18, 24], fuse: [3.2, 4], radius: 280, bombs: 2 },
+    map: [
+      '                                                                                                                                                                ',
+      '                                                                                                                                                                ',
+      '                   G                                        G                                          G                                                        ',
+      '                 G   G                                    G   G                                      G   G                                                      ',
+      '                                                                                                                                                                ',
+      '                                                                                                                                                                ',
+      '                                                                                                                                                                ',
+      '         o o                                        H                                         S                                          o o o                  ',
+      '        ------                   o o              -----                      o o            ------                       o o            ------                  ',
+      '                                ====   M                                    ====     M                                  ====     M                              ',
+      '  P   o o o    B          o o ======            B     C  o o o      B     ======                B o o C           B   ======                B  o o o B     F    ',
+      '====================    ==============      ==================    ==================      ==================    ================      ==========================',
+      '====================    ==============      ==================    ==================      ==================    ================      ==========================',
+    ],
+  },
+  {
+    name: 'Bombernes Nat',
+    theme: 'night',
+    barrelSpeed: 190,
+    spawnEvery: 2.4,
+    bomber: { first: 8, every: [16, 22], fuse: [3, 3.6], radius: 300, bombs: 2 },
+    map: [
+      '                                                                                                                                                                          ',
+      '                                                                                                                                                                          ',
+      '                    G                                         G                                                   G                                                       ',
+      '                  G   G                                     G   G                                               G   G                                                     ',
+      '                                                                                                                                                                          ',
+      '                                                                                                                                                                          ',
+      '                                                                                                                                                                          ',
+      '           o o              H                  o o o                  o                    S             o o                   o o o                H                     ',
+      '          -----            -----              ------                -----               -------         -----                 ------              -----                   ',
+      '                                  =                          M                =                                   =      M              =                                 ',
+      '  P   o o o   B              B    =         o o   B   C               B  o o  =           B     B         B   C   =             B  o o  =             B o o   B      F    ',
+      '======================   ===============    ================      ==================   =============    ================      ================   =========================',
+      '======================LLL===============LLLL================LLLLLL==================LLL=============LLLL================LLLLLL================LLL=========================',
     ],
   },
 ];

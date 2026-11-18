@@ -8,6 +8,7 @@ class Level {
     this.w = Math.max(...rows.map((r) => r.length));
     this.grid = [];
     this.bananas = [];
+    this.golds = [];
     this.items = [];
     this.cannons = [];
     this.checkpoints = [];
@@ -27,11 +28,12 @@ class Level {
             tile = ch; break;
           case 'B':
             tile = 'B';
-            this.cannons.push({ x, y, w: TILE, h: TILE, timer: 1 + Math.random() * 1.5, dir: -1, puff: 0 });
+            this.cannons.push({ x, y, w: TILE, h: TILE, timer: 1 + Math.random() * 1.5, dir: -1, puff: 0, stun: 0 });
             break;
           case 'P': this.start = { x: x + 7, y: y + TILE - 36 }; break;
           case 'F': this.finish = { x, y: y + TILE - 120, w: TILE, h: 120 }; break;
           case 'o': this.bananas.push({ x: x + 20, y: y + 20, taken: false }); break;
+          case 'G': this.golds.push({ x: x + 20, y: y + 20, taken: false }); break;
           case 'C': this.checkpoints.push({ x, y, reached: false, wave: 0 }); break;
           case 'M': this.movers.push({ x0: x, x, y, w: TILE * 3, h: 16, dx: 0, t: rnd(c) * 6 }); break;
           case 'H': case 'S': case 'W':
@@ -123,6 +125,17 @@ class Level {
         }
       }
     }
+  }
+
+  // Er der noget at lande på lige under dette sted (og ikke lava eller vand)?
+  groundBelow(x) {
+    const c = Math.floor(x / TILE);
+    for (let r = 3; r < this.h; r++) {
+      const ch = this.tile(c, r);
+      if (ch === '=' || ch === '-' || ch === 'B') return true;
+      if (ch === 'L' || ch === '~') return false;
+    }
+    return false;
   }
 
   // Rører kroppen lava eller vand?

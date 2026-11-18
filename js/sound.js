@@ -61,4 +61,15 @@ const Sound = {
   gameOver() { this.melody([392, 370, 349, 330, 0, 262], 0.18, 'triangle', 0.15); },
   win() { this.melody([523, 659, 784, 1047, 784, 1047, 1319, 0, 1319, 1568], 0.12, 'square', 0.09); },
   tick() { this.tone(1200, 0.04, 'square', 0.04); },
+  siren() {
+    for (let i = 0; i < 2; i++) {
+      this.tone(420, 0.3, 'sawtooth', 0.07, 860, i * 0.6);
+      this.tone(860, 0.3, 'sawtooth', 0.07, 420, i * 0.6 + 0.3);
+    }
+  },
+  plane() { this.tone(72, 0.13, 'sawtooth', 0.05, 54); },
+  bombDrop() { this.tone(1500, 0.75, 'sine', 0.09, 240); },
+  boom() { this.noise(0.9, 0.5); this.tone(115, 0.85, 'sawtooth', 0.2, 26); },
+  superOn() { this.melody([392, 523, 659, 784, 1047, 1319], 0.05, 'sawtooth', 0.07); },
+  superJump() { this.tone(240, 0.3, 'square', 0.09, 1300); },
 };

@@ -37,6 +37,21 @@ function drawHUD(ctx, g) {
   if (p.hammer > 0) slot((sx, sy) => drawHammerIcon(ctx, sx, sy, 0.9, 0), p.hammer / 10, '#ffd23b');
   if (p.star > 0) slot((sx, sy) => drawStarShape(ctx, sx, sy, 14, 0, '#ffe234', '#c79a00'), p.star / 8, '#fff36b');
   if (p.feather) slot((sx, sy) => drawFeather(ctx, sx, sy, 0.9, 0), null);
+  if (p.energy > 0) slot((sx, sy) => drawBolt(ctx, sx, sy - 2, 1), p.energy / p.energyMax, '#ffe234');
+
+  // Bombefly på vej!
+  const incoming = g.bomberWarn > 0 || (g.bomber && g.bomber.x - BOMBER_HALF > g.camX + W);
+  if (incoming && Math.floor(g.t * 6) % 2 === 0) {
+    text(ctx, 'BOMBEFLY!', W / 2, 64, 36, '#ff5a4a');
+    ctx.fillStyle = '#ff5a4a';
+    ctx.strokeStyle = '#2a1a0a';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(W - 14, 150); ctx.lineTo(W - 50, 126); ctx.lineTo(W - 50, 174);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.fill();
+  }
 }
 
 function panel(ctx, x, y, w, h) {

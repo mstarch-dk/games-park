@@ -69,6 +69,16 @@ function drawCannon(ctx, c, t) {
   ctx.lineWidth = 2;
   ctx.beginPath(); ctx.moveTo(-9, -15); ctx.lineTo(1, -11); ctx.stroke();
   ctx.restore();
+  // slået ud af en bombe: sodet og svimmel
+  if (c.stun > 0) {
+    ctx.fillStyle = 'rgba(15,12,10,0.55)';
+    roundRect(ctx, x, y, 40, 40, 6);
+    ctx.fill();
+    for (let i = 0; i < 3; i++) {
+      const a = t * 5 + i * 2.1;
+      drawStarShape(ctx, x + 20 + Math.cos(a) * 16, y - 6 + Math.sin(a) * 4, 4, a, '#ffe46b');
+    }
+  }
   // hjul
   circle(ctx, x + 10, y + 36, 6, '#2a2a2a');
   circle(ctx, x + 30, y + 36, 6, '#2a2a2a');

@@ -1,6 +1,8 @@
 // Aben! Styres med piletasterne.
 const RUN = 270;
 const JUMP = 800;
+const SUPER_RUN = 400;
+const SUPER_JUMP = 1200;
 
 class Player {
   constructor(x, y) {
@@ -17,6 +19,9 @@ class Player {
     this.hammer = 0;
     this.star = 0;
     this.invuln = 0;
+    this.energy = 0;
+    this.energyMax = 1;
+    this.soot = 0;
     this.runPhase = 0;
     this.flip = 0;
     this.squash = 0;
@@ -31,7 +36,8 @@ class Player {
 
     const dir = (Input.right() ? 1 : 0) - (Input.left() ? 1 : 0);
     if (dir) this.facing = dir;
-    this.vx = approach(this.vx, dir * RUN, (this.onGround ? 2600 : 1700) * dt);
+    const charged = this.energy > 0;
+    this.vx = approach(this.vx, dir * (charged ? SUPER_RUN : RUN), (this.onGround ? 2600 : 1700) * dt);
 
     // Tilgivende hop: man kan hoppe lidt efter man er gået ud over en kant,
     // og et tryk lige før man lander tæller også.
@@ -40,12 +46,17 @@ class Player {
 
     if (this.jumpBuf > 0) {
       if (this.coyote > 0) {
-        this.vy = -JUMP;
+        this.vy = charged ? -SUPER_JUMP : -JUMP;
         this.coyote = 0;
         this.jumpBuf = 0;
-        this.squash = -0.3;
-        Sound.jump();
-        Particles.burst(this.cx, this.y + this.h, 6, { color: '#e8d8b0', size: 4, speed: 80, life: 0.4, up: 40 });
+        this.squash = charged ? -0.5 : -0.3;
+        if (charged) {
+          Sound.superJump();
+          Particles.burst(this.cx, this.y + this.h, 14, { color: ['#ffe234', '#fff', '#ff9d2e'], shape: 'star', size: 5, speed: 200, life: 0.5 });
+        } else {
+          Sound.jump();
+          Particles.burst(this.cx, this.y + this.h, 6, { color: '#e8d8b0', size: 4, speed: 80, life: 0.4, up: 40 });
+        }
       } else if (this.feather && this.airJumps < 1) {
         this.vy = -JUMP * 0.92;
         this.airJumps++;
@@ -61,6 +72,8 @@ class Player {
     const wasGround = this.onGround;
     level.moveBody(this, dt);
     if (this.x < 0) this.x = 0;
+    // Aben må ikke forsvinde op over skærmen
+    if (this.y < 4) { this.y = 4; this.vy = Math.max(this.vy, 0); }
     if (this.onGround) {
       this.airJumps = 0;
       if (!wasGround && this.landVy > 300) {
@@ -72,7 +85,9 @@ class Player {
     this.hammer = Math.max(0, this.hammer - dt);
     this.star = Math.max(0, this.star - dt);
     this.invuln = Math.max(0, this.invuln - dt);
-    this.flip = Math.max(0, this.flip - dt * 13);
+    this.energy = Math.max(0, this.energy - dt);
+    this.soot = Math.max(0, this.soot - dt);
+    this.flip =Math.max(0, this.flip - dt * 13);
     this.squash = approach(this.squash, 0, dt * 2);
     this.runPhase += Math.abs(this.vx) * dt * 0.045;
     this.swing += dt * 13;
@@ -80,6 +95,13 @@ class Player {
     if (this.star > 0 && Math.random() < 0.5) {
       Particles.add({ x: this.cx + (Math.random() - 0.5) * 30, y: this.cy + (Math.random() - 0.5) * 36, shape: 'star', size: 4,
         color: `hsl(${Math.random() * 360},100%,65%)`, life: 0.5, vy: -30 });
+    }
+    if (this.energy > 0 && Math.random() < 0.6) {
+      Particles.add({ x: this.cx + (Math.random() - 0.5) * 34, y: this.cy + (Math.random() - 0.5) * 40, shape: 'star', size: 3.5,
+        color: Math.random() < 0.5 ? '#ffe234' : '#fff', life: 0.3, vx: -this.vx * 0.15, vy: -20 });
+    }
+    if (this.soot > 0 && Math.random() < 0.25) {
+      Particles.add({ x: this.cx, y: this.y, size: 5, color: 'rgba(60,60,60,0.6)', life: 0.6, vy: -50 });
     }
   }
 
@@ -101,6 +123,8 @@ class Player {
       hammerBlink: this.hammer > 0 && this.hammer < 2,
       swing: this.swing,
       star: this.star > 0,
+      energy: this.energy > 0 && (this.energy > 1 || Math.floor(t * 10) % 2 === 0),
+      soot: this.soot > 0,
       squash: this.squash,
       t,
     });
@@ -110,12 +134,28 @@ class Player {
 // Tegner aben. (x, y) er midt under fødderne.
 function drawMonkey(ctx, x, y, o) {
   const t = o.t || 0;
-  const fur = o.star ? `hsl(${(t * 500) % 360},85%,55%)` : '#8a5a2b';
-  const furDark = o.star ? `hsl(${(t * 500 + 50) % 360},85%,40%)` : '#6b4220';
-  const skin = '#f5cfa0';
+  let fur = '#8a5a2b';
+  let furDark = '#6b4220';
+  let skin = '#f5cfa0';
+  if (o.star) {
+    fur = `hsl(${(t * 500) % 360},85%,55%)`;
+    furDark = `hsl(${(t * 500 + 50) % 360},85%,40%)`;
+  } else if (o.soot) {
+    fur = '#2d2926';
+    furDark = '#1c1917';
+    skin = '#6a625a';
+  } else if (o.energy) {
+    fur = `hsl(${44 + Math.sin(t * 30) * 8},100%,52%)`;
+    furDark = '#d98a00';
+  }
 
   ctx.save();
   ctx.translate(x, y);
+  if (o.energy) {
+    ctx.globalAlpha = 0.25 + Math.sin(t * 24) * 0.08;
+    circle(ctx, 0, -26, 34, '#fff36b');
+    ctx.globalAlpha = 1;
+  }
   const sq = o.squash || 0;
   ctx.scale(1 + sq * 0.5, 1 - sq * 0.5);
   ctx.scale(0.8 * (o.facing || 1), 0.8);

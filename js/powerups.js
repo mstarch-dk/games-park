@@ -27,6 +27,17 @@ function drawBanana(ctx, x, y, t, scale = 1) {
   ctx.restore();
 }
 
+// Guld-banan: hænger så højt at den kun kan nås med super-hop.
+function drawGoldBanana(ctx, x, y, t) {
+  const bob = Math.sin(t * 3 + x) * 4;
+  ctx.globalAlpha = 0.3 + Math.sin(t * 5 + x) * 0.12;
+  circle(ctx, x, y + bob, 21, '#ffb800');
+  ctx.globalAlpha = 1;
+  drawBanana(ctx, x, y + bob, t, 1.3);
+  const s = (t * 1.5 + x * 0.01) % 1;
+  drawStarShape(ctx, x + 13, y + bob - 12, 6 * (1 - s), t * 3, '#fff');
+}
+
 function drawHammerIcon(ctx, x, y, s, rot) {
   ctx.save();
   ctx.translate(x, y);

@@ -20,6 +20,19 @@ const THEMES = {
     sky: ['#1d1b4f', '#8a5fc0'], sun: 'moon', far: '#3a2f6e', mid: '#2c2458', near: '#1a1438', deco: 'towers',
     ground: '#8a8aa0', groundDark: '#5f5f78', top: '#a8a8c0', bricks: true, plat: '#7a6a5a', platTop: '#a08a70',
   },
+  desert: {
+    sky: ['#f39a4a', '#ffeabc'], sun: '#fff1a8', far: '#e3ae70', mid: '#d09558', near: '#b97c42', deco: 'palms',
+    ground: '#d9a95f', groundDark: '#b98a45', top: '#f3d591', plat: '#9c6b3a', platTop: '#c99258',
+  },
+  snow: {
+    sky: ['#8fc8ef', '#f2fbff'], sun: '#ffffff', far: '#bcd5ea', mid: '#d5e5f3', near: '#edf5fb', deco: 'peaks', snowing: true,
+    ground: '#94afc9', groundDark: '#7893ae', top: '#ffffff', plat: '#60809f', platTop: '#dff0ff',
+  },
+  night: {
+    sky: ['#071226', '#27466f'], sun: 'moon', far: '#173150', mid: '#10263f', near: '#0a1a2c', deco: 'palms', darkPalms: true,
+    clouds: 'rgba(70,95,135,0.45)',
+    ground: '#3c3146', groundDark: '#2a2233', top: '#3f8f6a', grass: true, plat: '#5a4a5a', platTop: '#8a7a8a',
+  },
 };
 
 function hills(ctx, off, color, base, amp, wl, seed, pointy = false) {
@@ -55,9 +68,9 @@ function cloud(ctx, x, y, s, color = 'rgba(255,255,255,0.9)') {
   ctx.fill();
 }
 
-function palm(ctx, x, base, h, t, i) {
+function palm(ctx, x, base, h, t, i, dark = false) {
   const sway = Math.sin(t * 1.5 + i) * 4;
-  ctx.strokeStyle = '#7a4f2a';
+  ctx.strokeStyle = dark ? '#132338' : '#7a4f2a';
   ctx.lineWidth = 9;
   ctx.lineCap = 'round';
   ctx.beginPath();
@@ -66,7 +79,7 @@ function palm(ctx, x, base, h, t, i) {
   ctx.stroke();
   const tx = x + 6 + sway;
   const ty = base - h;
-  ctx.fillStyle = '#2f9a3f';
+  ctx.fillStyle = dark ? '#123049' : '#2f9a3f';
   for (let k = 0; k < 6; k++) {
     const a = (k / 6) * Math.PI * 2 + Math.sin(t + i) * 0.1;
     ctx.save();
@@ -162,11 +175,11 @@ function drawBackground(ctx, camX, th, t) {
       circle(ctx, ex + Math.sin(t * 2 + i) * 10, H - p * H, 2, `rgba(255,${150 + i * 4},50,${1 - p})`);
     }
   } else {
-    hills(ctx, camX * 0.1, th.far, 310, 60, 230, 1, th.deco === 'towers');
+    hills(ctx, camX * 0.1, th.far, 310, 60, 230, 1, th.deco === 'towers' || th.deco === 'peaks');
   }
 
   // Skyer
-  const cloudCol = th.deco === 'volcano' ? 'rgba(80,40,50,0.6)' : th.deco === 'towers' ? 'rgba(120,100,180,0.5)' : 'rgba(255,255,255,0.85)';
+  const cloudCol = th.clouds ? th.clouds : th.deco === 'volcano' ? 'rgba(80,40,50,0.6)' : th.deco === 'towers' ? 'rgba(120,100,180,0.5)' : 'rgba(255,255,255,0.85)';
   repeatLayer(camX * 0.2 + t * 8, 300, (x, i) => cloud(ctx, x, 60 + rnd(i + 3) * 110, 0.7 + rnd(i + 9) * 0.5, cloudCol));
 
   // Hav på stranden
@@ -195,8 +208,10 @@ function drawBackground(ctx, camX, th, t) {
 
   // Nærmeste lag
   if (th.deco === 'palms') {
-    repeatLayer(camX * 0.55, 230, (x, i) => palm(ctx, x, H, 170 + rnd(i) * 80, t, i));
+    repeatLayer(camX * 0.55, 230, (x, i) => palm(ctx, x, H, 170 + rnd(i) * 80, t, i, th.darkPalms));
     hills(ctx, camX * 0.6, th.near, 480, 18, 90, 3);
+  } else if (th.deco === 'peaks') {
+    hills(ctx, camX * 0.6, th.near, 470, 34, 90, 4, true);
   } else if (th.deco === 'beach') {
     repeatLayer(camX * 0.55, 340, (x, i) => palm(ctx, x, H, 150 + rnd(i) * 60, t, i));
   } else if (th.deco === 'volcano') {
@@ -205,5 +220,14 @@ function drawBackground(ctx, camX, th, t) {
     repeatLayer(camX * 0.65, 380, (x, i) => cloud(ctx, x, 480 + rnd(i) * 30, 2, 'rgba(160,200,245,0.6)'));
   } else if (th.deco === 'towers') {
     repeatLayer(camX * 0.5, 260, (x, i) => tower(ctx, x, H, 160 + rnd(i) * 120, 60 + rnd(i + 2) * 30, th.near, i, t));
+  }
+
+  // Snefnug
+  if (th.snowing) {
+    for (let i = 0; i < 45; i++) {
+      const fx = ((rnd(i) * W * 1.5 - camX * 0.4 + Math.sin(t + i) * 14) % W + W) % W;
+      const fy = (rnd(i + 30) * H + t * (24 + rnd(i + 60) * 30)) % H;
+      circle(ctx, fx, fy, 1.5 + rnd(i + 90) * 1.5, 'rgba(255,255,255,0.85)');
+    }
   }
 }
