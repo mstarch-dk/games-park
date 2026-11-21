@@ -64,8 +64,9 @@ const UI = {
     this.buttons.push(b);
     const m = Input.mouse;
     const hover = m.x >= x && m.x <= x + w && m.y >= y && m.y <= y + h;
-    if (hover && m.moved && b.enabled) this.focus = idx;
-    const focused = this.focus === idx;
+    // Knapper bag en åben dialog (passive) må hverken fange musen eller vise markering
+    if (hover && m.moved && b.enabled && !this.passive) this.focus = idx;
+    const focused = !this.passive && this.focus === idx;
     const base = !b.enabled ? ['#b8aa90', '#a0927a'] : focused ? ['#e65560', '#b82830'] : ['#7a5230', '#5a3a1e'];
     ctx.save();
     if (b.enabled) { ctx.shadowColor = 'rgba(0,0,0,0.3)'; ctx.shadowBlur = focused ? 12 : 5; ctx.shadowOffsetY = 3; }

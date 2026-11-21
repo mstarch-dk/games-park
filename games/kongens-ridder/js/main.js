@@ -150,7 +150,9 @@ const Game = {
     this.scene.draw(Art.lctx);
     Art.present(ctx);
     UI.beginFrame();
+    UI.passive = !!UI.dialog;
     this.scene.drawUI(ctx);
+    UI.passive = false;
     if (UI.dialog) { UI.buttons = []; UI.drawDialog(ctx); }
     UI.drawToasts(ctx, dt);
     if (this.paused) {

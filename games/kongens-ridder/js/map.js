@@ -47,7 +47,7 @@ const MapScreen = {
   buyMenu() {
     const p = fac('player');
     Game.dialog({
-      title: 'Køb og byg', cols: 2, back: SHOP.length,
+      title: 'Køb og byg', cols: 2, wide: true, back: SHOP.length,
       build: () => {
         const rid = G.regions[this.sel].owner === 'player' ? this.sel : p.home;
         const r = G.regions[rid];
