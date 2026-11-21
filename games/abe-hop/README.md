@@ -3,13 +3,13 @@
 Et platformspil hvor en abe hopper over tønder og flygter fra bomber gennem 8 baner.
 
 ## Sådan spiller du
-Åbn `index.html` i en browser (dobbeltklik), eller start en lille server:
+Abe-Hop er en del af [Spilleparken](../../README.md). Vælg spillet i parken, eller åbn denne mappes `index.html` direkte i en browser (dobbeltklik). Fra roden af repoet kan du også starte en lille server:
 
 ```bash
-python -m http.server 8123
+python -m http.server 8130
 ```
 
-og gå til http://localhost:8123
+og gå til http://localhost:8130/games/abe-hop/ – 🏠-knappen i hjørnet fører tilbage til parken.
 
 | Tast | Hvad den gør |
 |---|---|

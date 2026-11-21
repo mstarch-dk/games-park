@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spilleparken</title>
+  <meta name="description" content="En park fuld af små browserspil – vælg en forlystelse og spil.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎡</text></svg>">
+  <link rel="stylesheet" href="park/park.css">
+</head>
+<body>
+  <div class="sky" aria-hidden="true">
+    <div class="sun"></div>
+    <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+    <svg class="wheel" viewBox="-100 -100 200 200">
+      <g class="wheel-spin">
+        <circle r="80" fill="none" stroke="#fff" stroke-width="5"/>
+        <circle r="10" fill="#fff"/>
+        <g stroke="#fff" stroke-width="3">
+          <line x1="-80" y1="0" x2="80" y2="0"/><line x1="0" y1="-80" x2="0" y2="80"/>
+          <line x1="-57" y1="-57" x2="57" y2="57"/><line x1="-57" y1="57" x2="57" y2="-57"/>
+        </g>
+        <g>
+          <circle cx="80" cy="0" r="11" fill="#ff5d73"/><circle cx="-80" cy="0" r="11" fill="#ffd23f"/>
+          <circle cx="0" cy="80" r="11" fill="#3bceac"/><circle cx="0" cy="-80" r="11" fill="#7b5cff"/>
+          <circle cx="57" cy="57" r="11" fill="#ff9f1c"/><circle cx="-57" cy="-57" r="11" fill="#5ee0ff"/>
+          <circle cx="-57" cy="57" r="11" fill="#ff6fa8"/><circle cx="57" cy="-57" r="11" fill="#7dffb0"/>
+        </g>
+      </g>
+      <path d="M0 0 L-45 100 M0 0 L45 100" stroke="#fff" stroke-width="6"/>
+    </svg>
+  </div>
+
+  <header class="gate">
+    <div class="bunting" aria-hidden="true"></div>
+    <h1><span class="sign">🎡 Spilleparken 🎢</span></h1>
+    <p class="hint">Brug piletasterne og tryk <kbd>ENTER</kbd> – eller klik på en forlystelse!</p>
+  </header>
+
+  <main id="park" class="park" aria-label="Forlystelser">
+    <svg id="path" class="path" aria-hidden="true"></svg>
+    <ul id="rides" class="rides"></ul>
+    <div id="mascot" class="mascot" aria-hidden="true"><span class="balloon">🎈</span><span class="kid">🐻</span></div>
+  </main>
+
+  <footer class="bottom">
+    <button id="random" class="random" type="button">🎲 Overrask mig!</button>
+    <button id="sound" class="sound" type="button" aria-pressed="true" title="Lyd til/fra">🔊</button>
+  </footer>
+
+  <div id="curtain" class="curtain" aria-hidden="true"><div class="ticket">🎟️ <span id="curtain-title"></span></div></div>
+
+  <script src="games/games.js"></script>
+  <script src="park/park.js"></script>
+</body>
+</html>

@@ -3,13 +3,13 @@
 Styr et rumskib rundt i et lille felt, der hænger sammen i kanterne: flyver du ud til venstre, kommer du ind igen til højre. Der er ingen luft i rummet, så skibet glider videre når du slipper speederen – og planeten i midten trækker i alt med sin tyngdekraft.
 
 ## Sådan spiller du
-Åbn `index.html` i en browser (dobbeltklik), eller start en lille server:
+Rum-Duel er en del af [Spilleparken](../../README.md). Vælg spillet i parken, eller åbn denne mappes `index.html` direkte i en browser (dobbeltklik). Fra roden af repoet kan du også starte en lille server:
 
 ```bash
-python -m http.server 8124
+python -m http.server 8130
 ```
 
-og gå til http://localhost:8124
+og gå til http://localhost:8130/games/rum-duel/ – 🏠-knappen i hjørnet fører tilbage til parken.
 
 ## Spilformer
 | Spilform | Spillere | Hvad sker der |
