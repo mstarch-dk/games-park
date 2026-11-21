@@ -33,10 +33,12 @@ Conventions (copy the patterns from `games/abe-hop/` and `games/rum-duel/` – r
 - Title screen that explains the controls in big, friendly Danish text. Forgiving difficulty – the player is a child.
 - `<html lang="da">`, `<meta charset="utf-8">`, viewport meta, `<title>` = game title.
 
-## 2. Create the game's backlog `games-park-backlog/<id>/`
-Backlog.md format, as in `games-park-backlog/abe-hop/`:
+## 2. Create the game's backlog in the private backlog repo
+Work planning is **private** and must never be committed to this public repo. It lives in `mstarch-dk/games-park-backlog`, cloned at `C:\dev\games-park-backlog` (if it is missing, clone it there with `gh repo clone mstarch-dk/games-park-backlog C:/dev/games-park-backlog`). Create the board `C:\dev\games-park-backlog\<id>\backlog\` in Backlog.md format, like `abe-hop/backlog/`:
 - `config.yml` – copy from an existing game and set `project_name` to the title.
 - `tasks/task-N - <Titel>.md` – one task per chunk of work (engine, player, enemies, menus, play-test), with frontmatter (`id`, `title`, `status`, `created_date`, `ordinal`) and acceptance criteria. Mark them `Done` as you finish them.
+
+Commit and push those task files in the backlog repo, separately from the game commit.
 
 ## 3. Enlist the game in `games/games.js`
 Append one object to `window.PARK_GAMES`:
@@ -54,7 +56,7 @@ Append one object to `window.PARK_GAMES`:
   }
 ```
 
-Also add a line to the games table in the root `README.md`, and a task in `games-park-backlog/tasks/` noting the new game.
+Also add a line to the games table in the root `README.md`, and a task on the park board (`C:\dev\games-park-backlog\backlog\tasks\`) noting the new game.
 
 ## 4. Verify
 1. `pwsh tools/check-games.ps1` must print `OK`.
@@ -68,6 +70,6 @@ Also add a line to the games table in the root `README.md`, and a task in `games
 ## Importing an existing game instead
 If the user already has a game folder or repo:
 1. Keep its history: `git subtree add --prefix=games/<id> <path-or-url> <branch>` (if it is a git repo), otherwise copy the folder.
-2. Move any `backlog/` folder to `games-park-backlog/<id>/` with `git mv`; delete its `.claude/launch.json` (the park has one).
+2. Move any `backlog/` folder out of the public repo into `C:\dev\games-park-backlog\<id>\backlog\` (and `git rm` it here). If the import brought backlog files into this repo's history, strip them before pushing (`git filter-branch --index-filter 'git rm -r -q --cached --ignore-unmatch games/<id>/backlog backlog'`). Delete its `.claude/launch.json` (the park has one).
 3. Make it fit the conventions above: relative paths only, `home-button.js` include, prefixed localStorage keys, `cover.svg`, `README.md`.
 4. Do steps 3 and 4.

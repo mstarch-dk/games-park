@@ -31,6 +31,11 @@ foreach ($id in $ids) {
   }
 }
 
+# Arbejdsplanlægning hører til i det private repo games-park-backlog – aldrig her.
+$planning = Get-ChildItem $root -Recurse -Directory -Force -ErrorAction SilentlyContinue |
+  Where-Object { $_.FullName -notmatch '\\\.git(\\|$)' -and $_.Name -match '^(backlog|games-park-backlog)$' }
+foreach ($p in $planning) { $errors += "Backlog-mappe i det offentlige repo: $($p.FullName.Substring($root.Length + 1)) – flyt den til C:\dev\games-park-backlog" }
+
 $folders = Get-ChildItem $gamesDir -Directory | ForEach-Object Name
 foreach ($f in $folders) {
   if ($ids -notcontains $f) { $errors += "Mappen games/$f står ikke i games/games.js" }

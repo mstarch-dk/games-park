@@ -26,7 +26,6 @@ I parken: **← → ↑ ↓** vælger en bod, **ENTER/MELLEMRUM** går ind, **R*
 index.html, park/         parken (navigatoren) + hjem-knappen spillene bruger
 games/games.js            kataloget – ét objekt pr. spil
 games/<id>/               ét selvstændigt spil pr. mappe (index.html, style.css, js/, cover.svg, README.md)
-games-park-backlog/       parkens backlog + hvert spils backlog i <id>/ (Backlog.md-format)
 tools/check-games.ps1     tjekker at katalog og mapper passer sammen
 .claude/skills/add-game/  Claude-skill til at lave og tilføje et nyt spil
 ```
@@ -34,7 +33,7 @@ tools/check-games.ps1     tjekker at katalog og mapper passer sammen
 Hvert spil er ren HTML, CSS og JavaScript uden build-trin og uden eksterne filer, så en spilmappe kan kopieres ud og spilles for sig selv.
 
 ## Tilføj et nyt spil
-Med [Claude Code](https://claude.com/claude-code) i dette repo: bed om et nyt spil ("lav et nyt spil til parken om en frø der hopper over åkander"). Skillen `add-game` laver mappen, backloggen og indgangen i kataloget og tester det hele.
+Med [Claude Code](https://claude.com/claude-code) i dette repo: bed om et nyt spil ("lav et nyt spil til parken om en frø der hopper over åkander"). Skillen `add-game` laver mappen og indgangen i kataloget og tester det hele.
 
 I hånden:
 1. Lav `games/<id>/` med `index.html`, `style.css`, `js/`, `cover.svg` (320×200) og `README.md`.
