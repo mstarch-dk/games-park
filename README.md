@@ -10,6 +10,7 @@ En forlystelsespark fuld af små browserspil, lavet til (og sammen med) et barn.
 | 🐒 | [Abe-Hop](games/abe-hop/) | 1 | Platformspil: hop over tønder, saml bananer og flygt fra bombeflyet gennem 8 baner. |
 | 🚀 | [Rum-Duel](games/rum-duel/) | 1–2 | Rumskibe med ægte rumfysik og tyngdekraft: duel, mod computeren eller fjende-bølger. |
 | ✈️ | [Himmel-Heltene](games/himmel-heltene/) | 1–2 | Propelfly set oppefra: skyd fjendefly ned (piloterne hopper ud i faldskærm), saml power-ups og besejr luftskibet. |
+| 🏰 | [Kongens Ridder](games/kongens-ridder/) | 1 | Turbaseret strategi i 1500-tallets Danmark: erobr lenene, belejr borge med katapult, rid turnering i Roskilde og fægt for prinsessen. |
 
 ## Spil lokalt
 Dobbeltklik på `index.html` – det virker uden server og uden internet. Eller start en lille server i roden af repoet:
