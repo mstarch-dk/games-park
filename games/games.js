@@ -40,5 +40,15 @@ window.PARK_GAMES = [
     players: '1–2',
     keys: ['← → ↑ ↓ flyv', 'MELLEMRUM skyd', 'B venne-fly', 'P pause'],
     added: '2026-11-21'
+  },
+  {
+    id: 'kongens-ridder',
+    title: 'Kongens Ridder',
+    emoji: '🏰',
+    color: '#b23a48',
+    tagline: 'Saml Danmark land for land med hære, katapulter, turneringer og fægtning – så kongen kan vende hjem!',
+    players: '1',
+    keys: ['MUS / PILE vælg', 'ENTER bekræft', 'MELLEMRUM kast/stød', 'P pause'],
+    added: '2026-11-21'
   }
 ];

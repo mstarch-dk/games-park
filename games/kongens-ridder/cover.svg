@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b2350"/>
+      <stop offset="0.45" stop-color="#9a4a7a"/>
+      <stop offset="0.75" stop-color="#f2805a"/>
+      <stop offset="1" stop-color="#ffc27a"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fff1c9"/>
+      <stop offset="0.5" stop-color="#ffd27a" stop-opacity="0.6"/>
+      <stop offset="1" stop-color="#ffc27a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4a3a62"/>
+      <stop offset="1" stop-color="#22183a"/>
+    </linearGradient>
+  </defs>
+  <rect width="320" height="200" fill="url(#sky)"/>
+  <circle cx="240" cy="112" r="50" fill="url(#sun)"/>
+  <circle cx="240" cy="112" r="18" fill="#fff1c9"/>
+  <path d="M0 140 Q60 118 120 132 T240 128 T320 136 V200 H0Z" fill="#a65a78"/>
+  <path d="M0 160 Q80 140 160 154 T320 150 V200 H0Z" fill="#5e3a64"/>
+  <path d="M40 200 Q150 96 270 200Z" fill="url(#hill)"/>
+  <!-- borg -->
+  <g fill="#3a2c52" stroke="#1e1430" stroke-width="1.5" stroke-linejoin="round">
+    <path d="M118 150 V124 h6 v-5 h6 v5 h6 v-5 h6 v5 h6 v-5 h6 v5 h6 v-5 h6 v5 h6 V150Z"/>
+    <rect x="110" y="112" width="13" height="38" rx="1.5"/>
+    <rect x="173" y="112" width="13" height="38" rx="1.5"/>
+    <rect x="141" y="98" width="15" height="52" rx="1.5"/>
+  </g>
+  <g fill="#b8304a" stroke="#1e1430" stroke-width="1.5" stroke-linejoin="round">
+    <path d="M107 112 L116.5 92 L126 112Z"/>
+    <path d="M170 112 L179.5 92 L189 112Z"/>
+    <path d="M138 98 L148.5 72 L159 98Z"/>
+  </g>
+  <g fill="#ffcf6a">
+    <rect x="114.5" y="120" width="4" height="6" rx="2"/>
+    <rect x="177.5" y="120" width="4" height="6" rx="2"/>
+    <rect x="146.5" y="106" width="4" height="7" rx="2"/>
+    <path d="M143 150 v-8 a5 5 0 0 1 10 0 v8Z" fill="#1e1430"/>
+  </g>
+  <!-- Dannebrog -->
+  <line x1="148.5" y1="72" x2="148.5" y2="54" stroke="#1e1430" stroke-width="1.5"/>
+  <path d="M148.5 54 Q160 51 172 56 L172 68 Q160 64 148.5 67Z" fill="#d63a45"/>
+  <path d="M148.5 59.5 Q160 57 172 61.5 L172 63.5 Q160 59.5 148.5 61.5Z" fill="#fffaf0"/>
+  <rect x="154" y="54" width="2.5" height="12.5" fill="#fffaf0"/>
+  <!-- skjold -->
+  <g transform="translate(42 70)">
+    <path d="M-18 -22 H18 V0 Q18 13 0 22 Q-18 13 -18 0Z" fill="#d63a45" stroke="#c99a2e" stroke-width="2.5"/>
+    <rect x="-18" y="-4" width="36" height="7" fill="#fffaf0"/>
+    <rect x="-8" y="-22" width="7" height="44" fill="#fffaf0"/>
+  </g>
+  <text x="160" y="34" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="bold" font-size="30" fill="#2a1430" opacity="0.6">Kongens Ridder</text>
+  <text x="158" y="32" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-weight="bold" font-size="30" fill="#ffcc3d">Kongens Ridder</text>
+</svg>
