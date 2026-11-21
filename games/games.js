@@ -30,5 +30,15 @@ window.PARK_GAMES = [
     players: '1–2',
     keys: ['← → drej', '↑ speeder', 'MELLEMRUM skyd', '↓ special'],
     added: '2026-11-20'
+  },
+  {
+    id: 'himmel-heltene',
+    title: 'Himmel-Heltene',
+    emoji: '✈️',
+    color: '#2ec4f1',
+    tagline: 'Flyv propelfly, skyd de gnavne fly ned og saml power-ups – alene eller med en ven!',
+    players: '1–2',
+    keys: ['← → ↑ ↓ flyv', 'MELLEMRUM skyd', 'B venne-fly', 'P pause'],
+    added: '2026-11-21'
   }
 ];
