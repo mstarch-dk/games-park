@@ -17,8 +17,12 @@ const Economy = {
 
   income(fid) {
     const f = fac(fid);
-    let sum = regionsOf(fid).reduce((s, rid) => s + this.regionIncome(rid), 0);
+    const incs = regionsOf(fid).map((rid) => this.regionIncome(rid)).sort((a, b) => b - a);
+    // Herrernes lensmænd stikker en del i egen lomme, når riget bliver stort
+    let sum = incs.reduce((s, v, i) => s + (f.ai && i >= 4 ? v * 0.6 : v), 0);
+    sum = Math.round(sum);
     if (f.princess) sum += 3;
+    if (fid === 'player' && incs.length <= 3) sum += 3; // kongens venner sender sølv, mens riget er lille
     if (G.turn % 4 === 3) sum = Math.round(sum * 0.75); // vinter: mindre høst
     return sum;
   },

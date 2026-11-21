@@ -54,7 +54,8 @@ const Events = {
       if (!r.owner) return;
       const f = fac(r.owner);
       if (f.home === rid || r.gar.f + r.gar.k > 0 || f.army.at === rid) return;
-      if (Math.random() < 0.1) {
+      const size = f.ai ? Math.max(0, regionsOf(f.id).length - 5) : 0;
+      if (Math.random() < 0.1 + 0.03 * size) {
         const prev = r.owner;
         r.owner = null; r.gar = { f: 3, k: 0 };
         onRegionLost(prev, rid, null);

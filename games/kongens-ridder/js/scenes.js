@@ -113,7 +113,7 @@ const HelpScreen = {
       '    ↑ højt hug · → stød · ↓ lavt hug · ← parér. Hug hvor modstanderen IKKE holder sværdet!',
       '• Turnering i Roskilde (når den er udråbt): ← → ↑ ↓ sigt på skjoldet, HOLD MELLEMRUM lige før stødet.',
       '• Slut sæson: så går turen til de tre herrer. De angriber hinanden – og dig.',
-      'Efterlad vagter (G) i dine områder – områder uden vagter kan gøre oprør. Mister du din hjemborg, er spillet tabt!',
+      'Efterlad vagter (G) i dine områder – områder uden vagter kan gøre oprør. Lad ikke hjemborgen stå uden vagter, når hæren drager ud!',
       'Saml alle 15 områder, så kan kong Christian II vende hjem.',
     ];
     let y = 110;

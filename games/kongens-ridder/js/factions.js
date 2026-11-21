@@ -46,7 +46,7 @@ function newGame(heroIdx) {
   };
   G.factions.player = {
     id: 'player', name: h.name, short: h.short, arms: h.arms, color: PLAYER_COLOR, light: '#f8f4e8',
-    gold: 20, lead: h.lead, lance: h.lance, sword: h.sword, home: h.home, ai: false, alive: true,
+    gold: 30, lead: h.lead, lance: h.lance, sword: h.sword, home: h.home, ai: false, alive: true,
     army: { f: 12, k: 3, c: 0, at: h.home }, fame: 0, princess: false, captured: 0,
   };
   LORDS.forEach((l) => {
@@ -57,7 +57,7 @@ function newGame(heroIdx) {
     };
   });
   MapData.order.forEach((id) => {
-    G.regions[id] = { owner: null, gar: { f: randi(3, 6), k: Math.random() < 0.4 ? 1 : 0 }, castle: Math.random() < 0.35 ? 1 : 0, farm: 0, market: 0 };
+    G.regions[id] = { owner: null, gar: { f: randi(4, 8), k: Math.random() < 0.4 ? 1 : 0 }, castle: Math.random() < 0.35 ? 1 : 0, farm: 0, market: 0 };
   });
   // Herrerne begynder med et par områder hver – det er de, der har splittet riget.
   const starts = { gunder: ['holsten', 'slesvig'], eske: ['skaane', 'halland', 'blekinge'], brun: ['viborg', 'thy', 'vendsyssel'] };

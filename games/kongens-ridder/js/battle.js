@@ -122,9 +122,11 @@ function onRegionLost(prev, rid, by) {
       else { G.princess.state = 'captive'; G.princess.holder = by; }
     }
     // Hjemborgen er faldet: hærens rester flygter til et andet område
-    const left = regionsOf(prev);
+    const left = regionsOf(prev).sort((a, b) => Economy.regionIncome(b) - Economy.regionIncome(a));
     if (left.length) pf.home = left[0];
-    if (prev === 'player') G.over = 'lost-home';
+    if (prev === 'player' && left.length) {
+      G.log.push(`Din borg i ${MapData.regions[rid].name} er faldet! Din fane flyttes til ${MapData.regions[left[0]].name}. Tag borgen tilbage!`);
+    }
   }
   if (!regionsOf(prev).length) {
     pf.alive = false;

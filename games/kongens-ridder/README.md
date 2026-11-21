@@ -38,7 +38,7 @@ Hver **sæson** (forår, sommer, efterår, vinter) får du guld fra dine område
 
 Bagefter trækker de tre herrer. De angriber hinanden – og dig. Står din hær i det angrebne område, kæmper du selv.
 
-**Du vinder**, når alle 15 områder er dine. **Du taber**, hvis din hjemborg falder.
+**Du vinder**, når alle 15 områder er dine. **Du taber**, hvis du mister alle dine områder. Falder din hjemborg, flytter din fane til dit rigeste område – men lad ikke borgen stå uden vagter, når hæren drager ud!
 
 Pas på: områder uden garnison kan gøre **oprør**. Og når prinsessen er bortført, har du kun 10 sæsoner til at befri hende.
 

@@ -59,15 +59,20 @@ const AI = {
     const home = G.regions[f.home];
     if (f.army.at === f.home && home.gar.f < 4 && f.army.f > 8) { f.army.f -= 4; home.gar.f += 4; }
 
+    // Efter en erobring samler herren sine folk en sæson eller to
+    if (f.rest > 0) { f.rest--; this.advance(f); this.next(); return; }
+    // Ikke hver sæson er krigssæson – især ikke de første år
+    if (Math.random() > 0.5 + Math.min(0.3, G.turn * 0.01)) { this.advance(f); this.next(); return; }
+
     const power = Economy.armyPower(f.army) * War.leadMul(id);
-    const aggression = 1.35 - Math.min(0.35, G.turn * 0.01); // bliver dristigere med tiden
+    const aggression = 1.9 - Math.min(0.5, G.turn * 0.015); // forsigtige i starten, dristigere med tiden
     let best = null, bestScore = 0;
     this.targets(f).forEach((rid) => {
       const d = this.defence(rid, f.army.c);
       const r = G.regions[rid];
-      if (r.owner === 'player' && G.turn < 3) return; // de første sæsoner lader herrerne dig være
+      if (r.owner === 'player' && G.turn < 4) return; // de første sæsoner lader herrerne dig være
       let score = power / (d * aggression);
-      if (r.owner === 'player') score *= 1.15 + G.turn * 0.01;
+      if (r.owner) score *= 1 + 0.06 * (regionsOf(r.owner).length - 3); // de går helst efter den største
       if (r.owner && fac(r.owner).home === rid) score *= 0.9;
       score *= 1 + Economy.regionIncome(rid) * 0.04;
       if (score > bestScore) { bestScore = score; best = rid; }
@@ -110,7 +115,7 @@ const AI = {
     }
     const { result } = War.auto(id, rid, wall);
     const vName = victim ? (victim === 'player' ? 'dig' : fac(victim).short) : 'lenets folk';
-    if (result === 'atk') G.log.push(`${f.short} erobrede ${name} fra ${vName}.`);
+    if (result === 'atk') { G.log.push(`${f.short} erobrede ${name} fra ${vName}.`); f.rest = Math.random() < 0.6 ? randi(1, 2) : 0; }
     else if (victim === 'player') G.log.push(`${f.short} angreb ${name}, men din garnison holdt stand!`);
     else if (Math.random() < 0.5) G.log.push(`${f.short} angreb ${name} forgæves.`);
     this.next();
