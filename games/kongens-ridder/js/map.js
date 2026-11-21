@@ -190,7 +190,7 @@ const MapScreen = {
     UI.text(ctx, R.name, X, 206, 22, '#701018', 'left', true);
     UI.text(ctx, `Herre: ${r.owner ? fac(r.owner).name : 'ingen – lenets egne folk'}`, X, 232, 14, INK);
     UI.text(ctx, `Indtægt ${Economy.regionIncome(this.sel)} · ${CASTLE_NAMES[r.castle]}`, X, 252, 14, INK);
-    UI.text(ctx, `Garnison: ${r.gar.f} fodfolk, ${r.gar.k} riddere`, X, 272, 14, INK);
+    UI.text(ctx, `Vagter (garnison): ${r.gar.f} fodfolk, ${r.gar.k} riddere`, X, 272, 14, INK);
     const armies = Object.values(G.factions).filter((f) => f.alive && f.id !== 'player' && f.army.at === this.sel && !Economy.armyEmpty(f.army));
     armies.forEach((f, i) => UI.text(ctx, `${f.short}s hær: ${f.army.f} fodf., ${f.army.k} ridd., ${f.army.c} kat.`, X, 292 + i * 18, 14, '#701018'));
 
@@ -198,25 +198,34 @@ const MapScreen = {
     const bw = 145, bh = 38, gx = X, gy = 340;
     const attack = this.canAttack(this.sel), march = this.canMarch(this.sel);
     const here = p.army.at === this.sel && r.owner === 'player';
+    // [tast, tekst, aktiv, handling, forklaring vist når musen står på knappen]
     const btns = [
-      ['K', 'Køb og byg', true, () => this.buyMenu()],
-      ['T', 'Togt', true, () => Events.raidMenu()],
-      ['E', attack && r.castle ? 'Belejr!' : 'Erobr!', attack, () => Game.conquer(this.sel)],
-      ['H', 'March hertil', march, () => this.march(this.sel)],
-      ['G', 'Garnison +5', here && p.army.f > 0, () => { Economy.garrison('player', this.sel, 1); }],
-      ['F', 'Hent 5 vagter', here && r.gar.f + r.gar.k > 0, () => { Economy.garrison('player', this.sel, -1); }],
-      ['R', 'Turnering', G.tourney === 0, () => Events.tourneyMenu()],
-      ['S', 'Slut sæson', true, () => Game.endTurn()],
+      ['K', 'Køb og byg', true, () => this.buyMenu(), 'Køb soldater og katapulter, eller byg borg, gård og marked.'],
+      ['T', 'Togt', true, () => Events.raidMenu(), 'Snig dig ind i en herres borg og fægt – for guld eller prinsessen.'],
+      ['E', attack && r.castle ? 'Belejr!' : 'Erobr!', attack, () => Game.conquer(this.sel), 'Angrib det valgte naboområde med din hær.'],
+      ['H', 'March hertil', march, () => this.march(this.sel), 'Flyt hæren gennem dine egne lande (én gang pr. sæson).'],
+      ['G', 'Efterlad 5 vagter', here && p.army.f > 0, () => { Economy.garrison('player', this.sel, 1); },
+        'Sæt 5 fodfolk fra hæren som vagter her. De forsvarer området, når hæren drager videre.'],
+      ['F', 'Tag 5 vagter med', here && r.gar.f + r.gar.k > 0, () => { Economy.garrison('player', this.sel, -1); },
+        'Tag 5 af områdets vagter med i hæren igen.'],
+      ['R', 'Turnering', G.tourney === 0, () => Events.tourneyMenu(), 'Rid turnering i Roskilde, når den er udråbt.'],
+      ['S', 'Slut sæson', true, () => Game.endTurn(), 'Afslut sæsonen – så trækker herrerne.'],
     ];
-    btns.forEach(([k, label, en, fn], i) => {
-      UI.button(ctx, gx + (i % 2) * (bw + 6), gy + Math.floor(i / 2) * (bh + 6), bw, bh, label, { enabled: en, key: 'Key' + k, onClick: fn, size: 17 });
-      UI.text(ctx, k, gx + (i % 2) * (bw + 6) + 10, gy + Math.floor(i / 2) * (bh + 6) + 12, 11, en ? '#e0c890' : '#a09070');
+    const m = Input.mouse;
+    let hover = null;
+    btns.forEach(([k, label, en, fn, about], i) => {
+      const bx = gx + (i % 2) * (bw + 6), by = gy + Math.floor(i / 2) * (bh + 6);
+      UI.button(ctx, bx, by, bw, bh, label, { enabled: en, key: 'Key' + k, onClick: fn, size: 17 });
+      UI.text(ctx, k, bx + 10, by + 12, 11, en ? '#e0c890' : '#a09070');
+      if (!UI.passive && m.x >= bx && m.x <= bx + bw && m.y >= by && m.y <= by + bh) hover = about;
     });
     let hint = 'Vælg et område med musen eller piletasterne.';
-    if (attack) hint = r.castle ? (p.army.c ? 'ENTER: belejr borgen med dine katapulter.' : 'Borgen har mure – du skal have en katapult!') : 'ENTER: angrib området!';
+    if (hover) hint = hover;
+    else if (attack) hint = r.castle ? (p.army.c ? 'ENTER: belejr borgen med dine katapulter.' : 'Borgen har mure – du skal have en katapult!') : 'ENTER: angrib området!';
     else if (march) hint = 'ENTER: march hertil (én gang pr. sæson).';
+    else if (here) hint = 'Vagter bliver i området og forsvarer det. Områder uden vagter kan gøre oprør!';
     else if (G.marched && this.reachable().has(this.sel)) hint = 'Hæren har allerede marcheret denne sæson.';
-    UI.text(ctx, hint, X, 530, 13, INK);
+    UI.wrap(ctx, hint, 296, 13).slice(0, 2).forEach((l, i) => UI.text(ctx, l, X, 520 + i * 16, 13, INK));
     UI.text(ctx, `Dine lande: ${regionsOf('player').length} af ${MapData.order.length}`, X, 552, 14, '#701018', 'left', true);
     UI.text(ctx, 'ESC menu · P pause · M lyd', X, 574, 12, '#6a4a1a');
   },

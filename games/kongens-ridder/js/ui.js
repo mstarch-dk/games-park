@@ -75,7 +75,9 @@ const UI = {
     ctx.restore();
     if (focused && b.enabled) { ctx.strokeStyle = GOLD; ctx.lineWidth = 2.5; rrect(ctx, x + 1, y + 1, w - 2, h - 2, Math.min(11, h / 2.5)); ctx.stroke(); }
     ctx.fillStyle = 'rgba(255,255,255,0.12)'; rrect(ctx, x + 3, y + 2, w - 6, h * 0.4, Math.min(9, h / 3)); ctx.fill();
-    const size = opts.size || Math.min(20, h * 0.5);
+    let size = opts.size || Math.min(20, h * 0.5);
+    ctx.font = `bold ${size}px ${FONT}`;
+    while (size > 10 && ctx.measureText(label).width > w - 16) { size--; ctx.font = `bold ${size}px ${FONT}`; }
     this.text(ctx, label, x + w / 2, y + h / 2 + 1, size, b.enabled ? '#f8ecd0' : '#cbbf9f', 'center', focused);
     if (opts.keyHint) this.text(ctx, opts.keyHint, x + 8, y + h / 2, 13, '#d8c8a0', 'left');
     return b;

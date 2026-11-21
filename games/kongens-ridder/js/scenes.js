@@ -108,12 +108,12 @@ const HelpScreen = {
       'Hver sæson får du guld fra dine områder. Køb fodfolk, riddere og katapulter – eller byg borge, gårde og markeder.',
       'Du må marchere én gang pr. sæson gennem dine egne lande. Derefter vælger du én stor handling:',
       '• Erobr et naboområde (de blinkende). Har området en borg, skal muren først skydes i stykker med katapult:',
-      '    ↑↓ kraft · ← → sten eller ildkrukke · MELLEMRUM kast. Muren skal ned under 60 %.',
+      '    Hold MELLEMRUM for at spænde katapulten og slip for at kaste · ← → sten eller ildkrukke. Muren skal ned under 62 %.',
       '• Togt: snig dig ind i en herres borg og fægt – for guld, eller for at befri prinsessen.',
       '    ↑ højt hug · → stød · ↓ lavt hug · ← parér. Hug hvor modstanderen IKKE holder sværdet!',
       '• Turnering i Roskilde (når den er udråbt): ← → ↑ ↓ sigt på skjoldet, HOLD MELLEMRUM lige før stødet.',
       '• Slut sæson: så går turen til de tre herrer. De angriber hinanden – og dig.',
-      'Områder uden garnison kan gøre oprør. Mister du din hjemborg, er spillet tabt!',
+      'Efterlad vagter (G) i dine områder – områder uden vagter kan gøre oprør. Mister du din hjemborg, er spillet tabt!',
       'Saml alle 15 områder, så kan kong Christian II vende hjem.',
     ];
     let y = 110;

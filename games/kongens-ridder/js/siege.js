@@ -1,7 +1,7 @@
 // Belejring: skyd med katapulten mod borgmuren, indtil den er brudt.
 // ↑↓ kraft, ← → vælg sten eller ildkrukke, MELLEMRUM kast.
 const BLOCK_W = 6, BLOCK_H = 5, WALL_X = 226, WALL_BASE = 150, WALL_COLS = 12;
-const CAT_X = 46, CAT_Y = 156, GRAV = 120, BREACH = 0.6;
+const CAT_X = 46, CAT_Y = 156, GRAV = 120, BREACH = 0.62, CHARGE_SPEED = 0.62;
 
 const Siege = {
   enter(opts) {
@@ -17,7 +17,8 @@ const Siege = {
     this.fire = 1 + Math.floor(cats / 2);
     this.shotNo = 0;
     this.day = 1;
-    this.power = 0.5;
+    this.power = 0;
+    this.charging = false;
     this.ammo = 'stone';
     this.wind = rand(-1, 1);
     this.proj = null;
@@ -26,7 +27,7 @@ const Siege = {
     this.lastLand = null;
     this.phase = 'aim';    // aim | flying | breached | out | night
     this.t = 0;
-    this.msg = 'Sigt på muren! ↑↓ kraft · ← → ammunition · MELLEMRUM kast';
+    this.msg = 'Hold MELLEMRUM for at spænde katapulten – slip for at kaste · ← → ammunition';
     this.killed = 0;
     this.repairT = 0;
     UI.focus = 0;
@@ -43,6 +44,7 @@ const Siege = {
     const ang = 0.88, v = 90 + this.power * 95;
     this.proj = { x: CAT_X + 10, y: CAT_Y - 20, vx: Math.cos(ang) * v, vy: -Math.sin(ang) * v, kind: this.ammo, trail: [] };
     this.shotNo++;
+    this.lastPower = this.power;
     this.arm = 0.01;
     this.phase = 'flying';
     Sound.whoosh();
@@ -76,7 +78,7 @@ const Siege = {
     this.proj = null;
     this.lastLand = { x, y };
     if (hitWall) {
-      const n = this.smash(x, y, kind === 'fire' ? 16 : 9);
+      const n = this.smash(x, y, kind === 'fire' ? 18 : 10);
       if (kind === 'fire') {
         Sound.fire();
         for (let i = 0; i < 30; i++) this.parts.push({ x, y, vx: rand(-40, 40), vy: rand(-70, -10), life: rand(0.6, 1.6), c: pick([PAL.gold, PAL.dusk0, PAL.dusk1, PAL.red1]), g: 0.3 });
@@ -115,10 +117,15 @@ const Siege = {
     this.t += dt;
     if (this.arm > 0) this.arm = Math.min(1, this.arm + dt * 5);
     if (this.phase === 'aim') {
-      if (Input.down('ArrowUp', 'KeyW')) this.power = clamp(this.power + dt * 0.35, 0, 1);
-      if (Input.down('ArrowDown', 'KeyS')) this.power = clamp(this.power - dt * 0.35, 0, 1);
-      if (Input.left() || Input.right()) { this.ammo = this.ammo === 'stone' && this.fire > 0 ? 'fire' : 'stone'; Sound.tick(); }
-      if (Input.hit('Space')) this.throwShot();
+      // Katapulten spændes på ny hver gang: hold MELLEMRUM, slip for at kaste
+      if (!this.charging && (Input.left() || Input.right())) { this.ammo = this.ammo === 'stone' && this.fire > 0 ? 'fire' : 'stone'; Sound.tick(); }
+      if (Input.hit('Space')) { this.charging = true; this.power = 0; Sound.tick(); }
+      if (this.charging) {
+        if (Input.down('Space')) {
+          this.power = Math.min(1, this.power + dt * CHARGE_SPEED);
+          if (this.power >= 1) { this.charging = false; this.throwShot(); } // spændt helt i bund – den smutter
+        } else { this.charging = false; this.throwShot(); }
+      }
       if (this.arm >= 1) this.arm = 0;
     } else if (this.phase === 'flying' && this.proj) {
       const p = this.proj;
@@ -229,7 +236,7 @@ const Siege = {
     UI.text(ctx, `Dag ${this.day}`, 34, 92, 20, GOLD, 'left', true);
     UI.text(ctx, `Kast tilbage: ${this.shots - this.shotNo}`, 34, 120, 18, PARCH);
     UI.text(ctx, `Ildkrukker: ${this.fire}`, 34, 144, 18, PARCH);
-    UI.text(ctx, `Muren: ${Math.round(this.integrity() * 100)}%  (brud ved 60%)`, 34, 168, 16, PARCH);
+    UI.text(ctx, `Muren: ${Math.round(this.integrity() * 100)}%  (brud ved 62%)`, 34, 168, 16, PARCH);
     const wd = this.wind > 0.15 ? 'vind →' : this.wind < -0.15 ? '← vind' : 'stille';
     UI.text(ctx, `Vind: ${wd}`, 34, 192, 16, PARCH);
     // kraftmåler
@@ -238,6 +245,7 @@ const Siege = {
     const grd = ctx.createLinearGradient(0, 212, 0, 72);
     grd.addColorStop(0, '#3c6c28'); grd.addColorStop(0.6, '#f0c838'); grd.addColorStop(1, '#b82830');
     ctx.fillStyle = grd; ctx.fillRect(264, 208 - ph, 22, ph);
+    if (this.lastPower !== undefined) { ctx.fillStyle = '#fff'; ctx.fillRect(258, 208 - 132 * this.lastPower, 34, 2); }
     UI.text(ctx, 'Kraft', 275, 226, 15, PARCH, 'center');
     UI.text(ctx, this.ammo === 'fire' ? '🔥 Ildkrukke' : '🪨 Sten', 312, 92, 20, PARCH, 'left', true);
     UI.caption(ctx, this.phase === 'night' ? 'Natten falder på…' : this.msg);

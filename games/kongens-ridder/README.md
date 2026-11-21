@@ -28,7 +28,8 @@ Hver **sæson** (forår, sommer, efterår, vinter) får du guld fra dine område
    | Gård | 10 | +1 guld pr. sæson |
    | Marked | 18 | +2 guld pr. sæson |
 
-2. **March** én gang pr. sæson gennem dine egne lande (H) – og flyt vagter ind og ud af garnisonen (G/F).
+2. **March** én gang pr. sæson gennem dine egne lande (H).
+   **Efterlad 5 vagter** (G) sætter 5 fodfolk fra hæren til at vogte det område, hæren står i – de bliver der og forsvarer det, når hæren drager videre. **Tag 5 vagter med** (F) gør det modsatte.
 3. Vælg **én stor handling**, som afslutter sæsonen:
    - **Erobr** et naboområde (de stiplede). Har det en borg, skal muren først skydes i stykker med katapult.
    - **Togt** (T): snig dig ind i en herres borg og fægt – for guld, eller for at befri prinsessen.
@@ -46,7 +47,7 @@ Pas på: områder uden garnison kan gøre **oprør**. Og når prinsessen er bort
 |---|---|
 | Kortet | mus, eller **← → ↑ ↓** vælg område · **ENTER** angrib/march · bogstaverne på knapperne |
 | Slag | **1–4** vælg taktik (Angreb, Stå fast, Bombardér, Tilbagetog) |
-| Belejring | **↑ ↓** kraft · **← →** sten eller ildkrukke · **MELLEMRUM** kast |
+| Belejring | **hold MELLEMRUM** for at spænde katapulten, **slip** for at kaste · **← →** sten eller ildkrukke |
 | Turnering | **← → ↑ ↓** sigt på skjoldet · **hold MELLEMRUM** lige før stødet |
 | Fægtning | **↑** højt hug · **→** stød · **↓** lavt hug · **←** parér |
 
@@ -54,7 +55,7 @@ Pas på: områder uden garnison kan gøre **oprør**. Og når prinsessen er bort
 
 ## Tips
 - Fægtning: se hvor modstanderen holder sværdet – og hug et **andet** sted. Når han trækker sværdet tilbage, så parér med **←**.
-- Belejring: muren skal ned under 60 %. Om natten lapper forsvarerne den, så skyd hurtigt. Sten, der flyver over muren, rammer forsvarerne.
+- Belejring: katapulten skal spændes på ny til hvert kast – det hvide mærke på måleren viser sidste kast. Muren skal ned under 62 %. Om natten lapper forsvarerne den, så skyd hurtigt. Sten, der flyver over muren, rammer forsvarerne.
 - Turnering: holder du lansen sænket for længe, bliver armen træt og lansen svajer.
 
 ## Tilpas spillet
