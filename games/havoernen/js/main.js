@@ -501,6 +501,7 @@ const Game = {
     for (const b of this.balls) b.draw(ctx);
     Fx.drawAbove(ctx);
     if (this.player) this.drawShipLabels(ctx);
+    if (this.player && !this.player.sinking && ['playing', 'paused', 'boarding'].includes(this.state)) this.drawSideKeys(ctx, this.player);
     ctx.restore();
 
     switch (this.state) {
@@ -531,11 +532,30 @@ const Game = {
     }
   },
 
+  // Farvede A- og D-taster ved siden af skibet, så man altid kan se hvilken tast der skyder hvilken vej
+  drawSideKeys(ctx, P) {
+    for (const side of [-1, 1]) {
+      const a = P.heading + side * Math.PI / 2;
+      const r = P.wid / 2 + 20;
+      const x = P.x + Math.cos(a) * r, y = P.y + Math.sin(a) * r;
+      const ready = P.reload[side] <= 0;
+      ctx.globalAlpha = ready ? 1 : 0.5;
+      // lille pil fra skibet ud mod tasten
+      ctx.strokeStyle = SIDE[side].color; ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(P.x + Math.cos(a) * (P.wid / 2 + 3), P.y + Math.sin(a) * (P.wid / 2 + 3));
+      ctx.lineTo(P.x + Math.cos(a) * (r - 12), P.y + Math.sin(a) * (r - 12));
+      ctx.stroke();
+      keyBadge(ctx, x, y, SIDE[side].key, SIDE[side].color, 11);
+      ctx.globalAlpha = 1;
+    }
+  },
+
   drawAim(ctx, P) {
     for (const side of [-1, 1]) {
       const pts = predictShot(P, side);
       const ready = P.reload[side] <= 0;
-      const col = side < 0 ? '255,159,28' : '76,201,240';
+      const col = SIDE[side].rgb;
       ctx.globalAlpha = ready ? 0.9 : 0.35;
       // skyggen på vandet
       ctx.strokeStyle = `rgba(${col},0.5)`;
@@ -549,6 +569,7 @@ const Game = {
       const e = pts[pts.length - 1];
       ctx.lineWidth = 4;
       ctx.beginPath(); ctx.moveTo(e.x - 9, e.y - 9); ctx.lineTo(e.x + 9, e.y + 9); ctx.moveTo(e.x + 9, e.y - 9); ctx.lineTo(e.x - 9, e.y + 9); ctx.stroke();
+      keyBadge(ctx, e.x + 17, e.y - 15, SIDE[side].key, SIDE[side].color, 9);
       ctx.globalAlpha = 1;
     }
   },

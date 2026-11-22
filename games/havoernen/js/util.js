@@ -2,6 +2,25 @@
 const TAU = Math.PI * 2;
 const DEG = Math.PI / 180;
 
+// Farver for skibets to sider – bruges både ved skibet, på sigtebuen og i kanon-panelet
+const SIDE = {
+  '-1': { key: 'A', name: 'Bagbord', color: '#ff9f1c', rgb: '255,159,28' },
+  '1': { key: 'D', name: 'Styrbord', color: '#4cc9f0', rgb: '76,201,240' },
+};
+
+// Rund "tast" med et bogstav, fx A eller D
+function keyBadge(ctx, x, y, letter, color, r = 13) {
+  ctx.fillStyle = 'rgba(10,20,40,0.55)';
+  ctx.beginPath(); ctx.arc(x + 1.5, y + 2, r, 0, TAU); ctx.fill();
+  ctx.fillStyle = color;
+  ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill();
+  ctx.lineWidth = 2.5; ctx.strokeStyle = '#fff'; ctx.stroke();
+  ctx.font = `bold ${Math.round(r * 1.35)}px "Comic Sans MS", "Trebuchet MS", sans-serif`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#10213a';
+  ctx.fillText(letter, x, y + 1);
+}
+
 function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
 function lerp(a, b, t) { return a + (b - a) * t; }
 function rand(a, b) { return a + Math.random() * (b - a); }

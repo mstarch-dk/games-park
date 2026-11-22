@@ -20,6 +20,15 @@ canvas {
   box-shadow: 0 10px 50px rgba(40, 140, 220, 0.3);
   background: #2c7fb8;
 }
+.help b {
+  display: inline-block;
+  min-width: 1.3em;
+  border-radius: 50%;
+  color: #10213a;
+  border: 2px solid #fff;
+}
+.help .port { background: #ff9f1c; }
+.help .stb { background: #4cc9f0; }
 .help {
   margin: 0;
   font-size: 15px;

@@ -111,6 +111,7 @@ const HUD = {
       ctx.translate(side * 32, -2);
       ctx.rotate(side > 0 ? -e - P.heel * DEG * 2 : Math.PI + e - P.heel * DEG * 2);
       ctx.fillStyle = '#222'; ctx.fillRect(0, -3, 22, 6);
+      ctx.fillStyle = SIDE[side].color; ctx.fillRect(16, -4, 7, 8);
       ctx.restore();
     }
     ctx.restore();
@@ -118,7 +119,8 @@ const HUD = {
     for (const side of [-1, 1]) {
       const x = cx + side * 130;
       const ready = P.reload[side] <= 0;
-      outlineText(ctx, side < 0 ? 'Bagbord (A)' : 'Styrbord (D)', x, cy - 40, 15, '#fff');
+      keyBadge(ctx, x - 52, cy - 40, SIDE[side].key, SIDE[side].color, 12);
+      outlineText(ctx, SIDE[side].name, x + 10, cy - 40, 16, SIDE[side].color);
       outlineText(ctx, `${P.effElev(side).toFixed(0)}°`, x, cy - 12, 30, '#ffe066');
       this.bar(ctx, x - 50, cy + 12, 100, 12, 1 - P.reload[side] / P.reloadTime, ready ? '#06d6a0' : '#ef8354');
       outlineText(ctx, ready ? 'KLAR!' : 'lader...', x, cy + 36, 14, ready ? '#8ce99a' : '#ffb4a2');
