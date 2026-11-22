@@ -52,9 +52,11 @@ const TitleScreen = {
     UI.title(ctx, 'Kongens Ridder', 480, 90, 76);
     UI.text(ctx, 'Danmark, Anno Domini 1523', 480, 150, 24, PARCH, 'center');
     const bx = 360;
-    UI.button(ctx, bx, 410, 240, 40, 'Nyt spil', { onClick: () => Game.go('heroes') });
-    UI.button(ctx, bx, 456, 240, 40, 'Fortsæt', { enabled: this.hasSave, onClick: () => Game.continueGame() });
-    UI.button(ctx, bx, 502, 240, 40, 'Sådan spiller man', { onClick: () => Game.go('help') });
+    UI.button(ctx, bx, 352, 240, 40, 'Nyt spil', { onClick: () => Game.go('heroes') });
+    UI.button(ctx, bx, 398, 240, 40, 'Fortsæt', { enabled: this.hasSave, onClick: () => Game.continueGame() });
+    UI.button(ctx, bx, 444, 240, 40, 'Indlæs fra fil', { onClick: () => Save.importFile(
+      (g) => Game.loadGame(g), () => UI.toast('Det er ikke en gemt Kongens Ridder-fil')) });
+    UI.button(ctx, bx, 490, 240, 40, 'Sådan spiller man', { onClick: () => Game.go('help') });
     UI.caption(ctx, 'Saml riget, så den landflygtige kong Christian II kan vende hjem');
     if (Game.debug) UI.text(ctx, 'DEBUG: 7 belejring · 8 turnering · 9 fægtning', 480, 200, 16, '#ff8080', 'center');
   },

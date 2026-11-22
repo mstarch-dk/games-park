@@ -61,8 +61,12 @@ const Game = {
 
   continueGame() {
     const g = Save.read();
-    if (!g) return;
+    if (g) this.loadGame(g);
+  },
+
+  loadGame(g) {
     G = g;
+    Save.write();
     this.go('map');
     MapScreen.sel = fac('player').army.at;
   },

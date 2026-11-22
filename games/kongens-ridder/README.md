@@ -52,6 +52,7 @@ Pas på: områder uden garnison kan gøre **oprør**. Og når prinsessen er bort
 | Fægtning | **↑** højt hug · **→** stød · **↓** lavt hug · **←** parér |
 
 **P** pause · **M** lyd til/fra · **ESC** menu. Spillet gemmes automatisk hver sæson i browseren (`kongensridder-save`), så du kan trykke **Fortsæt** en anden dag.
+Vil du være helt sikker, så vælg **Gem til fil** i ESC-menuen: spillet hentes ned som en `.json`-fil, og den kan indlæses igen med **Indlæs fra fil** på titelskærmen – også på en anden computer, eller efter at browserens data er slettet.
 
 ## Tips
 - Fægtning: se hvor modstanderen holder sværdet – og hug et **andet** sted. Når han trækker sværdet tilbage, så parér med **←**.

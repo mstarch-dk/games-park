@@ -63,8 +63,13 @@ const MapScreen = {
   },
 
   menu() {
-    Game.dialog({ title: 'Kongens Ridder', lines: ['Spillet gemmes automatisk ved starten af hver sæson.'], back: 0,
-      buttons: [{ label: 'Spil videre' }, { label: 'Til titelskærmen', onClick: () => Game.go('title') }] });
+    Game.dialog({ title: 'Kongens Ridder', back: 0,
+      lines: ['Spillet gemmes automatisk ved starten af hver sæson.', 'Gem det også til en fil, hvis du vil være helt sikker.'],
+      buttons: [
+        { label: 'Spil videre' },
+        { label: 'Gem til fil', onClick: () => UI.toast(Save.exportFile() ? 'Spillet er gemt som fil' : 'Kunne ikke gemme filen') },
+        { label: 'Til titelskærmen', onClick: () => Game.go('title') },
+      ] });
   },
 
   update(dt) {
