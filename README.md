@@ -14,6 +14,7 @@ En forlystelsespark fuld af små browserspil, lavet til (og sammen med) et barn.
 | 🚂 | [Togbanen](games/togbanen/) | 1 | Roligt gådespil: læg skinner, så toget kan samle passagerer op og køre dem hjem. 20 baner med broer, køer, sporskifter og to tog, plus fri leg. |
 | ☁️ | [Klodsregn](games/klodsregn/) | 1 | Faldende klodser med ansigter: flyt og drej dem, lav hele rækker og spræng bunken med stjernebomber. Med en rolig tilstand hvor man ikke kan tabe. |
 | 🌍 | [Gæt et Land](games/gaet-et-land/) | 1 | Geografispil med alle 199 lande: se omrids, flag og ledetråde, klik på verdenskortet og få point efter hvor tæt du rammer. Med fakta-ark om hvert land og »Opdag verden«. |
+| ⛵ | [Havørnen](games/havoernen/) | 1 | Kaperfart i de danske farvande: sejl efter vinden, sigt med kanonerne (hældning, vind og krængning), opbring fremmede handelsskibe og sørøvere og tjen penge til nye kanoner og sejl – fra skibsdreng til admiral. |
 
 ## Spil lokalt
 Dobbeltklik på `index.html` – det virker uden server og uden internet. Eller start en lille server i roden af repoet:
