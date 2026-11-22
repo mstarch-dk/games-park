@@ -50,5 +50,15 @@ window.PARK_GAMES = [
     players: '1',
     keys: ['MUS / PILE vælg', 'ENTER bekræft', 'MELLEMRUM kast/stød', 'P pause'],
     added: '2026-11-21'
+  },
+  {
+    id: 'togbanen',
+    title: 'Togbanen',
+    emoji: '🚂',
+    color: '#2a9d8f',
+    tagline: 'Læg skinner og kør passagererne hjem til stationen med deres farve!',
+    players: '1',
+    keys: ['MUS træk skinner', 'PILE + MELLEMRUM byg', 'ENTER kør', 'H dyt'],
+    added: '2026-11-22'
   }
 ];
