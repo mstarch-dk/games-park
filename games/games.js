@@ -60,5 +60,15 @@ window.PARK_GAMES = [
     players: '1',
     keys: ['MUS træk skinner', 'PILE + MELLEMRUM byg', 'ENTER kør', 'H dyt'],
     added: '2026-11-22'
+  },
+  {
+    id: 'klodsregn',
+    title: 'Klodsregn',
+    emoji: '☁️',
+    color: '#ef476f',
+    tagline: 'Skyen regner klodser ned – drej dem og lav hele rækker!',
+    players: '1',
+    keys: ['← → flyt', '↑ drej', 'MELLEMRUM bum ned', 'P pause'],
+    added: '2026-11-22'
   }
 ];
