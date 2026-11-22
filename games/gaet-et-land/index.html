@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gæt et Land</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header id="top">
+      <div class="brand">🌍 Gæt et Land</div>
+      <div id="status"></div>
+      <div class="topbtns">
+        <button id="btn-sound" title="Lyd til/fra (M)">🔊</button>
+        <button id="btn-menu" title="Menu (ESC)">☰ Menu</button>
+      </div>
+    </header>
+
+    <main id="play">
+      <aside id="clues">
+        <div id="ask"></div>
+        <div class="cards">
+          <div class="card outline-card"><div class="card-title">Omrids</div><canvas id="outline"></canvas></div>
+          <div class="card flag-card" id="flag-card"><div class="card-title">Flag</div><img id="flag" alt="Flag"><div class="locked">?</div></div>
+        </div>
+        <ol id="cluelist"></ol>
+        <button id="btn-hint" class="big soft">💡 Ny ledetråd <small>(H)</small></button>
+        <div id="maxpts"></div>
+      </aside>
+
+      <div id="mapwrap">
+        <canvas id="map"></canvas>
+        <div class="zoom">
+          <button id="z-in" title="Zoom ind (+)">+</button>
+          <button id="z-out" title="Zoom ud (−)">−</button>
+          <button id="z-home" title="Hele verden (0)">🌐</button>
+        </div>
+        <div id="hovername"></div>
+        <div id="guessbar" class="hidden">
+          <span>Er det her?</span>
+          <button id="btn-guess" class="big go">📍 Gæt! <small>(ENTER)</small></button>
+        </div>
+        <div id="tip">Klik på kortet, hvor du tror landet ligger. Træk for at flytte kortet, rul eller knib for at zoome.</div>
+        <div id="result" class="hidden"></div>
+      </div>
+    </main>
+
+    <section id="menu" class="screen">
+      <div class="panel">
+        <h1>🌍 Gæt et Land</h1>
+        <p class="lead">Se omridset, flaget og ledetrådene – og klik på verdenskortet, hvor du tror landet ligger.
+          Jo tættere du rammer, jo flere point!</p>
+
+        <div class="opt">
+          <div class="opt-title">Hvor svært?</div>
+          <div class="choices" id="opt-level">
+            <button data-v="let"><b>🐣 Let</b><small>Du får navnet at vide.<br>Find det på kortet!</small></button>
+            <button data-v="normal"><b>🦊 Normal</b><small>Omrids, flag og en ledetråd.</small></button>
+            <button data-v="svaer"><b>🦅 Svær</b><small>Kun omridset.<br>Tør du?</small></button>
+          </div>
+        </div>
+        <div class="opt">
+          <div class="opt-title">Hvor i verden?</div>
+          <div class="choices small" id="opt-region">
+            <button data-v="">🌍 Hele verden</button>
+            <button data-v="Europa">🏰 Europa</button>
+            <button data-v="Afrika">🦁 Afrika</button>
+            <button data-v="Asien">🐼 Asien</button>
+            <button data-v="Nordamerika">🦅 Nordamerika</button>
+            <button data-v="Sydamerika">🦜 Sydamerika</button>
+            <button data-v="Oceanien">🦘 Oceanien</button>
+          </div>
+        </div>
+        <div class="opt">
+          <div class="opt-title">Hvilke lande?</div>
+          <div class="choices small" id="opt-pool">
+            <button data-v="1">⭐ Kendte lande</button>
+            <button data-v="2">⭐⭐ Flere lande</button>
+            <button data-v="3">⭐⭐⭐ Alle lande</button>
+          </div>
+        </div>
+
+        <div class="startrow">
+          <button id="btn-start" class="big go">▶ Start – 10 lande <small>(ENTER)</small></button>
+          <button id="btn-explore" class="big soft">🔎 Opdag verden</button>
+        </div>
+        <div id="best"></div>
+        <p class="keys">Mus/finger: klik på kortet · træk = flyt · rul/knib = zoom &nbsp;|&nbsp;
+          Taster: pile flyt · + − zoom · MELLEMRUM sæt nål i midten · ENTER gæt/næste · H ledetråd · F fakta · M lyd · ESC menu</p>
+      </div>
+    </section>
+
+    <section id="end" class="screen hidden">
+      <div class="panel" id="endpanel"></div>
+    </section>
+
+    <div id="sheet" class="modal hidden">
+      <div class="sheet-box">
+        <button class="close" id="sheet-close" title="Luk (ESC)">✕</button>
+        <div id="sheet-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data/shapes.js"></script>
+  <script src="js/data/countries.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/geo.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/outline.js"></script>
+  <script src="js/sheet.js"></script>
+  <script src="js/main.js"></script>
+  <script src="../../park/home-button.js"></script>
+</body>
+</html>

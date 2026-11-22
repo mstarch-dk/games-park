@@ -13,6 +13,7 @@ En forlystelsespark fuld af små browserspil, lavet til (og sammen med) et barn.
 | 🏰 | [Kongens Ridder](games/kongens-ridder/) | 1 | Turbaseret strategi i 1500-tallets Danmark: erobr lenene, belejr borge med katapult, rid turnering i Roskilde og fægt for prinsessen. |
 | 🚂 | [Togbanen](games/togbanen/) | 1 | Roligt gådespil: læg skinner, så toget kan samle passagerer op og køre dem hjem. 20 baner med broer, køer, sporskifter og to tog, plus fri leg. |
 | ☁️ | [Klodsregn](games/klodsregn/) | 1 | Faldende klodser med ansigter: flyt og drej dem, lav hele rækker og spræng bunken med stjernebomber. Med en rolig tilstand hvor man ikke kan tabe. |
+| 🌍 | [Gæt et Land](games/gaet-et-land/) | 1 | Geografispil med alle 199 lande: se omrids, flag og ledetråde, klik på verdenskortet og få point efter hvor tæt du rammer. Med fakta-ark om hvert land og »Opdag verden«. |
 
 ## Spil lokalt
 Dobbeltklik på `index.html` – det virker uden server og uden internet. Eller start en lille server i roden af repoet:

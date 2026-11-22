@@ -70,5 +70,15 @@ window.PARK_GAMES = [
     players: '1',
     keys: ['← → flyt', '↑ drej', 'MELLEMRUM bum ned', 'P pause'],
     added: '2026-11-22'
+  },
+  {
+    id: 'gaet-et-land',
+    title: 'Gæt et Land',
+    emoji: '🌍',
+    color: '#3a86c8',
+    tagline: 'Se omrids, flag og ledetråde – og find landet på verdenskortet!',
+    players: '1',
+    keys: ['MUS klik på kortet', 'TRÆK flyt · HJUL zoom', 'H ledetråd', 'F fakta'],
+    added: '2026-11-22'
   }
 ];
