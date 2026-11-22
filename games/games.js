@@ -80,5 +80,15 @@ window.PARK_GAMES = [
     players: '1',
     keys: ['MUS klik på kortet', 'TRÆK flyt · HJUL zoom', 'H ledetråd', 'F fakta'],
     added: '2026-11-22'
+  },
+  {
+    id: 'havoernen',
+    title: 'Havørnen',
+    emoji: '⛵',
+    color: '#c8862a',
+    tagline: 'Sejl efter vinden, sigt med kanonerne og opbring skibe i de danske farvande!',
+    players: '1',
+    keys: ['← → ror', '↑ ↓ sejl', 'W S sigt · A D skyd', 'ENTER entr/havn'],
+    added: '2026-11-22'
   }
 ];
