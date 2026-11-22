@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2f5fa8"/><stop offset="1" stop-color="#2a1f5c"/>
+    </linearGradient>
+    <g id="face">
+      <circle cx="-5" cy="-1" r="2.2" fill="#1d1d2b"/><circle cx="5" cy="-1" r="2.2" fill="#1d1d2b"/>
+      <path d="M-4 4 q4 4 8 0" stroke="#1d1d2b" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    </g>
+  </defs>
+  <rect width="320" height="200" fill="url(#sky)"/>
+  <g stroke="#cfe8ff" stroke-width="2" opacity=".35">
+    <path d="M30 60 l-2 12 M60 110 l-2 12 M270 70 l-2 12 M290 130 l-2 12 M250 30 l-2 12 M40 150 l-2 12"/>
+  </g>
+  <!-- bunken -->
+  <g transform="translate(90 104)">
+    <g id="b">
+      <rect x="0" y="64" width="28" height="28" rx="7" fill="#ef476f"/>
+      <rect x="28" y="64" width="28" height="28" rx="7" fill="#ef476f"/>
+      <rect x="56" y="64" width="28" height="28" rx="7" fill="#4361ee"/>
+      <rect x="84" y="64" width="28" height="28" rx="7" fill="#4361ee"/>
+      <rect x="112" y="64" width="28" height="28" rx="7" fill="#06d6a0"/>
+      <rect x="0" y="36" width="28" height="28" rx="7" fill="#ffd166"/>
+      <rect x="28" y="36" width="28" height="28" rx="7" fill="#ffd166"/>
+      <rect x="84" y="36" width="28" height="28" rx="7" fill="#4361ee"/>
+      <rect x="112" y="36" width="28" height="28" rx="7" fill="#06d6a0"/>
+    </g>
+    <rect x="-2" y="62" width="144" height="32" rx="9" fill="#fff" opacity=".35"/>
+    <use href="#face" x="14" y="78"/><use href="#face" x="42" y="78"/><use href="#face" x="70" y="78"/>
+    <use href="#face" x="98" y="78"/><use href="#face" x="126" y="78"/>
+    <use href="#face" x="14" y="50"/><use href="#face" x="42" y="50"/><use href="#face" x="98" y="50"/><use href="#face" x="126" y="50"/>
+  </g>
+  <!-- faldende T-klods -->
+  <g transform="translate(146 72)">
+    <rect x="0" y="0" width="28" height="28" rx="7" fill="#b5179e"/>
+    <rect x="-28" y="28" width="28" height="28" rx="7" fill="#b5179e"/>
+    <rect x="0" y="28" width="28" height="28" rx="7" fill="#b5179e"/>
+    <rect x="28" y="28" width="28" height="28" rx="7" fill="#b5179e"/>
+    <use href="#face" x="14" y="14"/><use href="#face" x="-14" y="42"/><use href="#face" x="14" y="42"/><use href="#face" x="42" y="42"/>
+  </g>
+  <!-- stjerner -->
+  <g fill="#ffe066">
+    <path d="M60 160 l4 9 10 1 -8 6 3 10 -9 -6 -9 6 3 -10 -8 -6 10 -1z"/>
+    <path d="M255 150 l3 7 8 1 -6 5 2 8 -7 -5 -7 5 2 -8 -6 -5 8 -1z"/>
+  </g>
+  <!-- skyen -->
+  <g transform="translate(160 34)">
+    <g fill="#fff">
+      <circle cx="-70" cy="6" r="18"/><circle cx="-38" cy="-4" r="24"/><circle cx="0" cy="-10" r="28"/>
+      <circle cx="38" cy="-4" r="24"/><circle cx="70" cy="6" r="18"/><rect x="-80" y="0" width="160" height="24" rx="12"/>
+    </g>
+    <path d="M-20 -2 a6 6 0 0 1 12 0 M8 -2 a6 6 0 0 1 12 0" stroke="#1d1d2b" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M-9 6 a9 9 0 0 0 18 0z" fill="#1d1d2b"/>
+    <circle cx="-30" cy="8" r="6" fill="#ff7896" opacity=".5"/><circle cx="30" cy="8" r="6" fill="#ff7896" opacity=".5"/>
+  </g>
+</svg>
