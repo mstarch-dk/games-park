@@ -90,5 +90,15 @@ window.PARK_GAMES = [
     players: '1',
     keys: ['← → ror', '↑ ↓ sejl', 'W S sigt · A D skyd', 'ENTER entr/havn'],
     added: '2026-11-22'
+  },
+  {
+    id: 'over-vejen',
+    title: 'Over Vejen',
+    emoji: '🐥',
+    color: '#8ac926',
+    tagline: 'Hjælp ællingen over vejen og hjem til mor and – kig efter bilerne!',
+    players: '1',
+    keys: ['PILE hop', 'H kig-hjælp', 'P pause', 'M lyd'],
+    added: '2026-11-23'
   }
 ];
