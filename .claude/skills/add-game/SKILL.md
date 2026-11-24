@@ -1,15 +1,62 @@
 ---
 name: add-game
-description: Author a new self-contained HTML game for the games-park (Spilleparken) library and enlist it in the park navigator, or import an existing game folder/repo into the park. Use when the user wants to make, add, build, import or register a game in games-park ("lav et nyt spil", "tilføj et spil til parken").
+description: Author a new self-contained HTML game for the games-park (Spilleparken) library and enlist it in the park navigator, or import an existing game folder/repo into the park. Always starts with a concrete game proposal (or choices when the wish is vague) for the user to approve before building. Use when the user wants to make, add, build, import or register a game in games-park ("lav et nyt spil", "tilføj et spil til parken").
 ---
 
 # Add a game to Spilleparken
 
 The park is a library of small browser games for a child. Every game is a **self-contained folder** under `games/<id>/` that runs by double-clicking its `index.html` – no build step, no server, no internet. The park navigator (`index.html` at the repo root) lists every game registered in `games/games.js`.
 
-## 0. Agree on the game (short)
-Ask only what you cannot decide yourself: the idea, 1 or 2 players, and the name. Defaults: Danish UI text, keyboard controls, canvas.
-The game must be **original** – a genre or mechanic is fine (platformer, space shooter, puzzle), but never recreate a specific existing game (its name, characters, art, music, levels or look).
+## 0. Plan first – propose before building
+**Never create files before the user has approved a concrete proposal.** Improvising is welcome, but inside a bounded frame: the user's wish fixes the frame, you fill in the details, and when the wish is too thin you offer choices instead of guessing.
+
+### 0a. The interpretation frame
+Every game wish must end up filling these dimensions:
+
+| Dimension | Examples |
+|---|---|
+| **Core mechanic / genre** | jump-platform, dodge, aim-and-shoot, puzzle, sailing, catch |
+| **Theme & hero** | duckling, spaceship, monkey, pirate ship |
+| **Goal** – what "winning" is | reach home, collect 10 stars, survive 60 s |
+| **Players** | 1, or 1–2 on the same keyboard |
+| Controls | arrows+SPACE / WASD+F vs. arrows+L / mouse |
+| Progression & length | levels, rising difficulty, round length |
+| Learning / feeling (optional) | counting, predicting, reaction, calm |
+
+Classify each dimension as **given** (stated in the wish), **derived** (follows naturally from what is given – "the duckling must cross the road" ⇒ dodge mechanic, 1 player, goal = reach the other side) or **missing**.
+
+### 0b. How much you may improvise
+- **Free to improvise** (no need to ask): art style, colours, sounds, level design, scoring details, fun extra effects, title/name suggestions.
+- **May improvise, but must be stated explicitly in the proposal**: derived dimensions and defaults (Danish UI, keyboard controls, canvas).
+- **Never guess silently**: core mechanic, theme and number of players. If any of these is missing – or more than ~2 dimensions are missing in total – go to 0d.
+
+### 0c. Concrete proposal (when the frame is filled)
+Before anything is created, present a short, scannable proposal in Danish:
+- Title, `id`, emoji and a one-sentence pitch.
+- Core loop: what the child does second by second, the goal, and what happens on a mistake (forgiving – the player is a child).
+- Controls and players.
+- Progression: number of levels/stages and what changes between them.
+- **First version** (keep it small) vs. **"senere idéer"** that are deliberately left out.
+- Mark everything you improvised or derived ("Mit bud: …") so the user can correct it.
+
+Then wait for approval – use AskUserQuestion (e.g. "Byg det" / "Ret noget"), or ExitPlanMode when in plan mode. Only start step 1 after a yes; apply any corrections to the proposal first.
+
+### 0d. Offer choices (when the wish is too thin)
+Use AskUserQuestion to fill the frame instead of improvising the core:
+- 1–3 questions, one per missing core dimension, each with 2–4 concrete, clearly different options with a short description. Put your recommendation first.
+- When almost everything is missing ("lav et sjovt spil"), ask one question with 2–3 complete game concepts instead, using `preview` for a mini-pitch (core loop, goal, controls) per concept.
+- Don't ask about things you are free to improvise (0b).
+
+With the answers, go to 0c and present the full proposal.
+
+**Examples**
+- *"Et spil med dyr"* – theme half-given, mechanic, goal and players missing → 0d: e.g. "Hvilken slags spil?" with *Hop-platform med en abe* / *Fang faldende frugt med en bjørn* / *Undvig-spil med en ælling*, plus "1 eller 2 spillere?".
+- *"Ællingen skal over vejen hjem til mor and"* – theme and goal given, mechanic and players derived → straight to 0c, with "Mit bud: undvig biler, 1 spiller, piletaster, 10 baner med mere trafik".
+
+### 0e. Originality and id
+The game must be **original** – a genre or mechanic is fine (platformer, space shooter, puzzle), but never recreate a specific existing game (its name, characters, art, music, levels or look). If the wish names an existing game, propose an original game in the same genre and say so.
+
+Read `games/games.js` before proposing: say so if the idea is very close to a game already in the park, and suggest how to make it different.
 
 Pick an `id`: kebab-case from the Danish title (`abe-hop`, `rum-duel`). It must not already exist in `games/games.js`.
 
@@ -68,7 +115,7 @@ Also add a line to the games table in the root `README.md`, and a task on the pa
 3. Commit on a branch (`add-game/<id>`), never straight to `main` unless asked.
 
 ## Importing an existing game instead
-If the user already has a game folder or repo:
+If the user already has a game folder or repo, skip the proposal in step 0 – just confirm the title and `id` (0e) before starting:
 1. Keep its history: `git subtree add --prefix=games/<id> <path-or-url> <branch>` (if it is a git repo), otherwise copy the folder.
 2. Move any `backlog/` folder out of the public repo into `C:\dev\games-park-backlog\<id>\backlog\` (and `git rm` it here). If the import brought backlog files into this repo's history, strip them before pushing (`git filter-branch --index-filter 'git rm -r -q --cached --ignore-unmatch games/<id>/backlog backlog'`). Delete its `.claude/launch.json` (the park has one).
 3. Make it fit the conventions above: relative paths only, `home-button.js` include, prefixed localStorage keys, `cover.svg`, `README.md`.
