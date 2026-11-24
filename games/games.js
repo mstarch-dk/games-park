@@ -100,5 +100,15 @@ window.PARK_GAMES = [
     players: '1',
     keys: ['PILE hop', 'H kig-hjælp', 'P pause', 'M lyd'],
     added: '2026-11-23'
+  },
+  {
+    id: 'guldtoget',
+    title: 'Guldtoget',
+    emoji: '🚆',
+    color: '#e9b824',
+    tagline: 'Skift spor i sidste øjeblik, når toget kommer brusende – og kør guldet hjem!',
+    players: '1',
+    keys: ['← → skift spor', '↑ ligeud', 'MELLEMRUM dyt', 'P pause'],
+    added: '2026-11-24'
   }
 ];
